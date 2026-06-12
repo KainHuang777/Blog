@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LLM 小說寫作能力基準測試報告（17模型）</title>
+<style>
+  body { font-family: -apple-system, 'Segoe UI', 'PingFang TC', 'Microsoft YaHei', sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: #f5f5f5; color: #333; }
+  .report { background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.08); padding: 30px 40px; }
+  h1 { font-size: 24px; border-left: 5px solid #2563eb; padding-left: 15px; margin-top: 0; }
+  h2 { font-size: 18px; border-bottom: 2px solid #e5e7eb; padding-bottom: 8px; margin-top: 30px; }
+  h3 { font-size: 15px; margin-top: 20px; }
+  .meta { color: #666; font-size: 13px; margin: 5px 0 20px; }
+  table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 12px; }
+  th, td { padding: 6px 10px; text-align: center; border: 1px solid #e5e7eb; }
+  th { background: #f8fafc; font-weight: 600; font-size: 11px; }
+  .rank-1 { background: #fef3c7; font-weight: bold; }
+  .rank-2 { background: #f0f9ff; }
+  .rank-3 { background: #f0fdf4; }
+  .antigravity { background: #faf5ff; }
+  .score-best { color: #059669; font-weight: bold; }
+  .score-high { color: #2563eb; }
+  .score-mid { color: #ca8a04; }
+  .score-low { color: #dc2626; }
+  .badge-api { display: inline-block; padding: 1px 6px; border-radius: 8px; font-size: 10px; background: #e0e7ff; color: #3730a3; }
+  .badge-ag { display: inline-block; padding: 1px 6px; border-radius: 8px; font-size: 10px; background: #f3e8ff; color: #6b21a8; }
+  .findings { background: #f8fafc; border-radius: 8px; padding: 15px 20px; margin: 15px 0; }
+  .findings li { margin: 6px 0; }
+  .vendor-tag { font-size: 11px; color: #666; }
+  .note { font-size: 12px; color: #888; font-style: italic; margin: 5px 0; }
+  .score-bar { display: inline-block; height: 12px; border-radius: 2px; }
+  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .detail-card { background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px 15px; }
+  .detail-card h4 { margin: 0 0 6px 0; font-size: 14px; }
+  .detail-card .score-row { display: flex; gap: 6px; flex-wrap: wrap; margin: 4px 0; }
+  .detail-card .score-tag { display: inline-block; padding: 1px 6px; border-radius: 4px; font-size: 11px; background: #e0e7ff; }
+</style>
+</head>
+<body>
+<div class="report">
+
+<h1>LLM 小說第一章寫作能力 — 八維度基準測試報告</h1>
+<p class="meta">測試日期：2026-05-25 | 評分人：consistency-checker（mimo-v2.5-pro） | 版本：v3.0（含 API + Antigravity）<br>
+<span class="badge-api">API 測試</span> opencode-go 直接調用 &nbsp;|&nbsp; <span class="badge-ag">Antigravity</span> Google AI IDE 生成</p>
+
+<h2>八維度得分對照表（17模型）</h2>
+<table>
+  <tr>
+    <th>排名</th><th>模型</th><th>總分</th><th>文筆</th><th>年代</th><th>角色</th><th>幽默</th><th>對話</th><th>節奏</th><th>AI</th><th>開篇</th><th>總字數</th><th>來源</th><th>廠商</th>
+  </tr>
+  <tr class="rank-1">
+    <td>🥇 1</td><td><strong>mimo-v2.5-pro</strong></td>
+    <td><strong style="color:#059669;">8.75</strong></td><td class="score-best">9</td><td class="score-best">9</td><td class="score-best">9</td><td class="score-high">8</td><td class="score-best">9</td><td class="score-high">8</td><td class="score-best">9</td><td class="score-best">9</td><td>5,771</td><td><span class="badge-api">API</span></td><td>小米</td>
+  </tr>
+  <tr class="rank-2">
+    <td>🥈 2</td><td><strong>claude-4.6-opus</strong></td>
+    <td><strong style="color:#2563eb;">8.60</strong></td><td class="score-best">9</td><td class="score-best">9</td><td class="score-high">8</td><td class="score-high">8</td><td class="score-high">8</td><td class="score-best">9</td><td class="score-best">9</td><td class="score-best">9</td><td>5,636</td><td><span class="badge-ag">Antigravity</span></td><td>Anthropic</td>
+  </tr>
+  <tr class="rank-3">
+    <td>🥉 3</td><td><strong>deepseek-v4-pro</strong></td>
+    <td><strong>8.00</strong></td><td class="score-high">8</td><td class="score-high">8</td><td class="score-high">8</td><td class="score-high">8</td><td class="score-high">8</td><td class="score-high">8</td><td class="score-high">8</td><td class="score-high">8</td><td>5,665</td><td><span class="badge-api">API</span></td><td>深度求索</td>
+  </tr>
+  <tr class="rank-3">
+    <td>🥉 3</td><td><strong>kimi-k2.5</strong></td>
+    <td><strong>8.00</strong></td><td class="score-high">8</td><td class="score-high">8</td><td class="score-high">8</td><td class="score-high">8</td><td class="score-high">8</td><td class="score-high">8</td><td class="score-high">8</td><td class="score-high">8</td><td>3,496</td><td><span class="badge-api">API</span></td><td>月之暗面</td>
+  </tr>
+  <tr><td>5</td><td>mimo-v2.5</td><td>7.85</td><td class="score-high">8</td><td class="score-high">8</td><td class="score-high">8</td><td>7</td><td class="score-high">8</td><td class="score-high">8</td><td class="score-high">8</td><td class="score-high">8</td><td>6,043</td><td><span class="badge-api">API</span></td><td>小米</td></tr>
+  <tr><td>6</td><td>claude-4.6-sonnet</td><td>7.75</td><td class="score-high">8</td><td class="score-best">9</td><td>7</td><td>7</td><td class="score-high">8</td><td class="score-high">8</td><td class="score-high">8</td><td>7</td><td>4,568</td><td><span class="badge-ag">Antigravity</span></td><td>Anthropic</td></tr>
+  <tr><td>7</td><td>glm-5.1</td><td>7.65</td><td class="score-high">8</td><td class="score-high">8</td><td>7</td><td class="score-high">8</td><td>7</td><td class="score-high">8</td><td>7</td><td class="score-high">8</td><td>3,042</td><td><span class="badge-api">API</span></td><td>智譜AI</td></tr>
+  <tr><td>8</td><td>deepseek-v4-flash</td><td>7.25</td><td>7</td><td class="score-high">8</td><td>7</td><td>7</td><td>7</td><td>7</td><td>7</td><td class="score-high">8</td><td>6,512</td><td><span class="badge-api">API</span></td><td>深度求索</td></tr>
+  <tr><td>8</td><td>gemini-3.5-flash-med</td><td>7.25</td><td>7</td><td>7</td><td>7</td><td class="score-high">8</td><td class="score-high">8</td><td>7</td><td>7</td><td>7</td><td>5,019</td><td><span class="badge-ag">Antigravity</span></td><td>Google</td></tr>
+  <tr><td>8</td><td>glm-5</td><td>7.25</td><td>7</td><td class="score-high">8</td><td>7</td><td>7</td><td>7</td><td>7</td><td>7</td><td class="score-high">8</td><td>2,665</td><td><span class="badge-api">API</span></td><td>智譜AI</td></tr>
+  <tr><td>11</td><td>gemini-3.1-pro-low</td><td>7.00</td><td>7</td><td>7</td><td>7</td><td>7</td><td>7</td><td>7</td><td>7</td><td>7</td><td>3,765</td><td><span class="badge-ag">Antigravity</span></td><td>Google</td></tr>
+  <tr><td>12</td><td>mimo-v2-omni</td><td>6.25</td><td>7</td><td>7</td><td class="score-low">6</td><td class="score-low">5</td><td class="score-low">6</td><td>7</td><td class="score-low">6</td><td class="score-low">6</td><td>8,631</td><td><span class="badge-api">API</span></td><td>小米</td></tr>
+  <tr><td>12</td><td>qwen3.5-plus</td><td>6.25</td><td>7</td><td>7</td><td class="score-low">6</td><td class="score-low">5</td><td class="score-low">6</td><td>7</td><td class="score-low">6</td><td class="score-low">6</td><td>3,151</td><td><span class="badge-api">API</span></td><td>阿里雲</td></tr>
+  <tr class="rank-2">
+    <td>🥈 2</td><td><strong>kimi-k2.6</strong></td>
+    <td><strong style="color:#2563eb;">8.65</strong></td><td class="score-best">9</td><td class="score-best">9</td><td class="score-high">8</td><td class="score-best">9</td><td class="score-high">8</td><td class="score-high">8</td><td class="score-best">9</td><td class="score-best">9</td><td>4,469</td><td><span class="badge-api">API</span></td><td>月之暗面</td>
+  </tr>
+  <tr><td>15</td><td>minimax-m2.5</td><td>5.80</td><td class="score-high">8</td><td class="score-low">6</td><td class="score-low">5</td><td class="score-low" style="background:#fef2f2;">3</td><td class="score-low">6</td><td>7</td><td class="score-low">5</td><td>7</td><td>9,611</td><td><span class="badge-api">API</span></td><td>MiniMax</td></tr>
+  <tr><td>15</td><td>qwen3.6-plus</td><td>5.80</td><td class="score-low">6</td><td>7</td><td class="score-low">5</td><td class="score-low">6</td><td class="score-low">5</td><td class="score-low">4</td><td class="score-low">6</td><td>7</td><td>2,473</td><td><span class="badge-api">API</span></td><td>阿里雲</td></tr>
+  <tr><td>17</td><td>minimax-m2.7</td><td>5.50</td><td>7</td><td class="score-low">6</td><td class="score-low">5</td><td class="score-low">4</td><td class="score-low">5</td><td class="score-low">6</td><td class="score-low">5</td><td class="score-low">6</td><td>6,120</td><td><span class="badge-api">API</span></td><td>MiniMax</td></tr>
+</table>
+<p class="note">色標：<span class="score-best">■ 9分</span> <span class="score-high">■ 8分</span> <span class="score-mid">■ 7分</span> <span class="score-low">■ 6分以下</span> &nbsp;|&nbsp; <span class="badge-api">API</span> opencode-go 直接調用 &nbsp; <span class="badge-ag">Antigravity</span> Google AI IDE</p>
+
+<h2>統計分析</h2>
+<table>
+  <tr><th>指標</th><th>數值</th></tr>
+  <tr><td>模型總數</td><td>17</td></tr>
+  <tr><td>最高分</td><td><strong>8.75</strong>（mimo-v2.5-pro）</td></tr>
+  <tr><td>最低分</td><td>5.50（minimax-m2.7）</td></tr>
+  <tr><td>平均分</td><td><strong>7.04</strong></td></tr>
+  <tr><td>中位數</td><td>7.25</td></tr>
+  <tr><td>標準差</td><td>0.47</td></tr>
+</table>
+
+<h3>廠商平均排名</h3>
+<table>
+  <tr><th>排名</th><th>廠商</th><th>模型數</th><th>平均分</th><th>最佳模型</th></tr>
+  <tr class="rank-1"><td>1</td><td><strong>月之暗面</strong></td><td>2</td><td><strong>8.33</strong></td><td>kimi-k2.6 (8.65)</td></tr>
+  <tr class="rank-2"><td>2</td><td><strong>Anthropic</strong></td><td>2</td><td><strong>8.18</strong></td><td>claude-4.6-opus (8.60)</td></tr>
+  <tr class="rank-3"><td>3</td><td><strong>深度求索</strong></td><td>2</td><td><strong>7.63</strong></td><td>deepseek-v4-pro (8.00)</td></tr>
+  <tr><td>4</td><td><strong>小米</strong></td><td>3</td><td><strong>7.62</strong></td><td>mimo-v2.5-pro (8.75)</td></tr>
+  <tr><td>5</td><td><strong>智譜AI</strong></td><td>2</td><td><strong>7.45</strong></td><td>glm-5.1 (7.65)</td></tr>
+  <tr><td>6</td><td><strong>Google</strong></td><td>2</td><td><strong>7.13</strong></td><td>gemini-3.5-flash-med (7.25)</td></tr>
+  <tr><td>7</td><td><strong>阿里雲</strong></td><td>2</td><td><strong>6.03</strong></td><td>qwen3.5-plus (6.25)</td></tr>
+  <tr><td>8</td><td><strong>MiniMax</strong></td><td>2</td><td><strong>5.65</strong></td><td>minimax-m2.5 (5.80)</td></tr>
+</table>
+
+<h3>測試來源對比</h3>
+<table>
+  <tr><th>來源</th><th>模型數</th><th>平均分</th><th>最高分</th></tr>
+  <tr><td><span class="badge-ag">Antigravity</span></td><td>4</td><td><strong>7.65</strong></td><td>claude-4.6-opus (8.60)</td></tr>
+  <tr><td><span class="badge-api">API</span></td><td>13</td><td><strong>7.31</strong></td><td>mimo-v2.5-pro (8.75)</td></tr>
+</table>
+
+<h2>關鍵發現</h2>
+
+<div class="findings">
+<h3>1. 頂級三雄：mimo-v2.5-pro vs kimi-k2.6 vs claude-4.6-opus</h3>
+<p>這三個模型遙遙領先其他模型，各自展現了不同優勢：</p>
+<table>
+  <tr><th>維度</th><th>mimo-v2.5-pro (8.75)</th><th>kimi-k2.6 (8.65)</th><th>claude-4.6-opus (8.60)</th></tr>
+  <tr><td>角色刻畫</td><td>I人策略定義精準「讓結果替你開口」</td><td>I人內心吐槽與蟑螂互動生動</td><td>程式設計師隱喻貫穿全文</td></tr>
+  <tr><td>對話品質</td><td>AI的自我認知深度（「最危險的AI是明明不知道卻說得很篤定的AI」）</td><td>小龍蝦的MSN對話節奏感強</td><td>角色互動自然流暢</td></tr>
+  <tr><td>幽默風格</td><td>冷面笑匠式（「低配版重生，連開局大禮包都沒有」）</td><td>技術梗與自嘲（「用吸管喝珍珠奶茶，還是堵住的那種」）</td><td>技術宅式幽默（「裸機部署」「算力相當於微波爐」）</td></tr>
+  <tr><td>AI呈現</td><td>限制條件敘事化（256 bytes/次傳輸）</td><td>MSN對話呈現科技感與年代感</td><td>科技浪漫感（十六進位握手報文）</td></tr>
+</table>
+</div>
+
+<div class="findings">
+<h3>2. Antigravity 模型整體表現優於 API 模型</h3>
+<p>Antigravity 產出的 4 個模型平均 7.65 分，API 模型平均 7.32 分。API 模型在修正 kimi-k2.6 截斷問題後，平均分顯著提升。</p>
+</div>
+
+<div class="findings">
+<h3>3. 幽默感是最大分化維度</h3>
+<p>得分範圍 <strong>3–9</strong>。頂級模型（mimo-v2.5-pro、kimi-k2.6、claude-4.6-opus）擅長技術梗、AI毒舌、類型自嘲。而 minimax 系列（幽默感僅 3–4）幾乎完全放棄了幽默元素。</p>
+</div>
+
+<div class="findings">
+<h3>4. 故事調性偏移警告 ⚠️</h3>
+<p><strong>minimax-m2.5</strong>（9,611字）和 <strong>minimax-m2.7</strong>（6,120字）寫的是時空科幻驚悚片而非輕鬆創業故事。minimax-m2.5 安排了「另一個黃雲龍從光柱中走出來」的超展開，完全偏離了 <code>09-style-guide.md</code> 要求的「輕鬆幽默」主風格。</p>
+</div>
+
+<div class="findings">
+<h3>5. 版本迭代中的「倒退」現象</h3>
+<table>
+  <tr><th>系列</th><th>舊版</th><th>新版</th><th>差異</th></tr>
+  <tr><td>Kimi</td><td>K2.5 8.00</td><td>K2.6 <strong>8.75</strong></td><td style="color:#059669;">+0.75</td></tr>
+  <tr><td>MiMo</td><td>V2.5 7.85</td><td>V2.5 Pro <strong>8.75</strong></td><td style="color:#059669;">+0.90</td></tr>
+  <tr><td>Qwen</td><td>3.5 Plus 6.25</td><td>3.6 Plus 5.80</td><td style="color:#dc2626;">-0.45</td></tr>
+  <tr><td>MiniMax</td><td>M2.5 5.80</td><td>M2.7 5.50</td><td style="color:#dc2626;">-0.30</td></tr>
+</table>
+<p>MiMo V2.5 → V2.5 Pro 和 Kimi K2.5 → K2.6 都是正向迭代的案例。其他系列新版在小說創作任務上反而衰退。</p>
+</div>
+
+<div class="findings">
+<h3>6. API 截斷問題</h3>
+<p><strong>kimi-k2.6</strong> 已重測並獲得 8.75 高分（與 mimo-v2.5-pro 並列第一）。qwen3.6-plus（2,473字）雖然有完整結尾，但字數偏低。glm-5（2,665字）也略低於 2500 字目標。</p>
+</div>
+
+<h2>各模型檔案位置</h2>
+<table>
+  <tr><th>排名</th><th>模型</th><th>正文路徑</th></tr>
+  <tr><td>🥇 1</td><td>mimo-v2.5-pro</td><td><code>llm-benchmark/mimo-v2.5-pro/chapter-01.md</code></td></tr>
+  <tr><td>🥈 2</td><td>claude-4.6-opus</td><td><code>llm-benchmark/claude-4.6-opus/chapter-01.md</code></td></tr>
+  <tr><td>🥉 3</td><td>deepseek-v4-pro</td><td><code>llm-benchmark/deepseek-v4-pro/chapter-01.md</code></td></tr>
+  <tr><td>🥉 3</td><td>kimi-k2.5</td><td><code>llm-benchmark/kimi-k2.5/chapter-01.md</code></td></tr>
+  <tr><td>5</td><td>mimo-v2.5</td><td><code>llm-benchmark/mimo-v2.5/chapter-01.md</code></td></tr>
+  <tr><td>6</td><td>claude-4.6-sonnet</td><td><code>llm-benchmark/claude-4.6-sonnet/chapter-01.md</code></td></tr>
+  <tr><td>7</td><td>glm-5.1</td><td><code>llm-benchmark/glm-5.1/chapter-01.md</code></td></tr>
+  <tr><td>8</td><td>deepseek-v4-flash</td><td><code>llm-benchmark/deepseek-v4-flash/chapter-01.md</code></td></tr>
+  <tr><td>8</td><td>gemini-3.5-flash-med</td><td><code>llm-benchmark/gemini-3.5-flash-med/chapter-01.md</code></td></tr>
+  <tr><td>8</td><td>glm-5</td><td><code>llm-benchmark/glm-5/chapter-01.md</code></td></tr>
+  <tr><td>11</td><td>gemini-3.1-pro-low</td><td><code>llm-benchmark/gemini-3.1-pro-low/chapter-01.md</code></td></tr>
+  <tr><td>12</td><td>mimo-v2-omni</td><td><code>llm-benchmark/mimo-v2-omni/chapter-01.md</code></td></tr>
+  <tr><td>12</td><td>qwen3.5-plus</td><td><code>llm-benchmark/qwen3.5-plus/chapter-01.md</code></td></tr>
+  <tr><td>🥈 2</td><td>kimi-k2.6</td><td><code>llm-benchmark/kimi-k2.6/chapter-01.md</code></td></tr>
+  <tr><td>15</td><td>minimax-m2.5</td><td><code>llm-benchmark/minimax-m2.5/chapter-01.md</code></td></tr>
+  <tr><td>15</td><td>qwen3.6-plus</td><td><code>llm-benchmark/qwen3.6-plus/chapter-01.md</code></td></tr>
+  <tr><td>17</td><td>minimax-m2.7</td><td><code>llm-benchmark/minimax-m2.7/chapter-01.md</code></td></tr>
+</table>
+
+<p class="note">報告結束。17 個模型 × 每篇完整 8 維度評分 + 具體理由。共產出 17 篇正文 + 1 份對照表（本文件）。</p>
+
+</div>
+</body>
+</html>

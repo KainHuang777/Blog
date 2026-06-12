@@ -1,0 +1,77 @@
+更新日期：2026-05-28
+- 在 `assets/js/app.js` 中成功配置與填寫了真實的 Supabase 專案網址與公有 Anon Key 金鑰，正式打通靜態部落格與雲端 PostgreSQL 資料庫的計數器雙向鏈路。
+
+更新日期：2026-05-28
+- 整合 Supabase 雲端資料庫 API，實現部落格主頁總訪問量與文章閱讀次數的動態統計。
+- 在 `index.html` 引入 Supabase JS SDK CDN，重構 Hero 區塊的統計數據列，將原有的「持續演進 (∞)」更換為動態「總訪問量」展示，完美融入背景毛玻璃風格。
+- 在 `post.html` 引入 Supabase JS SDK CDN，在文章詳細頁的標頭 Meta 資訊區精緻嵌入「閱讀次數」展示容器。
+- 深度重構與修改 `assets/js/app.js`：
+  1. 將 `initHomePage` 重構為非同步 `async` 函數，實作主頁訪問量自動累加（防刷冷卻）與全部文章點擊數的「一次性批量拉取」算法，將數據完美傳遞至首頁文章卡片動態渲染。
+  2. 實作 `handlePostViewCount` 防刷統計核心，採用 `localStorage` 10 分鐘冷卻機制抵禦惡意灌水；並呼叫 Supabase 的 RPC 安全累加函數與 RLS 授權讀取，在 API 請求失敗時實作優雅降級 Fallback 機制，確保文章渲染不受任何阻礙。
+- 修改 `assets/css/style.css`，尾部追加全新設計的「科技感霓虹青 (Glow Cyan)」毛玻璃膠囊徽章樣式，搭配微光外發光陰影、scale 縮放與 hover 微位移呼吸動畫，提升使用者與計數器的動態互動反饋。
+- 專門編寫 `test_supabase_config.py` 本地 API 連線與 RPC 可用性測試探針腳本，便於在終端機中一鍵驗證 Supabase 專案 URL 與 Anon Key 的正確性。
+
+更新日期：2026-05-28
+- 完美歸檔《Unity 行動遊戲 Lua 資產加密逆向研究報告》精美技術筆記至部落格。
+- 升級首頁文章資料庫 posts.json，註冊新增該篇逆向工程技術筆記的 metadata，並設計了可供前後相容的 `"format": "html"` 文章格式屬性。
+- 深度重構 assets/js/app.js 內的文章載入引擎，新增無縫的 HTML 文章渲染模式。當載入 HTML 格式文章時，改採透明、無內外距且最大寬度解鎖的自適應高度 `iframe` 容器無縫嵌入，完美防止 HTML 自訂 CSS 全域污染部落格的 navbar 及 footer 樣式。
+- 整合 `ResizeObserver` 動態高度適應監測算法，解決了跨域及跨文檔的高度適應崩塌問題，同時使部落格原本的頁尾滾動和頂部閱讀進度條在閱讀 HTML 格式研究報告時依然 100% 完美正常工作。
+
+更新日期：2026-05-28
+- 在首頁 index.html 右側側邊欄整合全新「精選作品 / Showcase」展示卡片，首發配置由 Antigravity 團隊攜手 KainHuang777 開發之仙俠風多國語言網頁放置遊戲《修仙問道》（Xianxia Idle）線上直達連結通道。
+- 修改 assets/css/style.css，為精選作品小工具量身調配高貴之「琥珀修仙金 (Amber Gold)」邊框漸層與外發光 hover 陰影，完美融合科技感深色模式。
+- 採用 CSS 3D 旋轉與微動畫技術，設計當滑鼠懸停於作品卡片時，左側陰陽太極圖標自動進行「☯️ 慢速自轉動畫」，打造出精美、具紀念價值且動態感十足的首頁個人項目 Showcase。
+- 使用寫作管理助手在背景執行自動化 Commit 與 Pushing 同步至 GitHub，並自動聯動觸發 Netlify 在線部署上線。
+
+更新日期：2026-05-28
+- 升級本地寫作與管理助手 manage_blog.py，整合「Git 版本管理與 GitHub 雲端部署 (DevOps Sync)」模組，提供一鍵式本地 Commit 備份與一鍵 Push 同步至 GitHub 的自動化部署流水線。
+- 設計獨立的 Git 控制子選單，功能包括：
+  1. 彩色感應顯示變更檔案狀態（Git Status）。
+  2. 智能防呆一鍵初始化倉庫（Git Init）並自動配置實用的 .gitignore。
+  3. 自動化生成自帶時間戳與操作摘要的 Commit 本地備份訊息（同時支援自訂輸入）。
+  4. 分支名稱自動檢測，引導遠端 origin 倉庫 HTTPS URL 綁定，一鍵推送到 GitHub 雲端，實時觸發 Netlify 背景部署。
+- 同步在 README.md 說明書中追加本項一鍵發布部署工具的詳細操作與安全同步指引。
+
+更新日期：2026-05-28
+- 升級本地寫作與管理助手 manage_blog.py 的文章下架邏輯，將原本的物理刪除全面替換為「網頁註銷下架 + 實體檔案移動備份」的高防呆安全機制。
+- 當下架文章時，助手會自動建立 posts_archive/ 封存備份目錄，並將原稿 Markdown 檔案安全移動至其中，若遇到備份區同名衝突，會自動追加精確時間戳記，確保原稿絕對安全、100% 不丟失。
+- 同步修正 README.md 以及管理助手主選單中的 UI 標籤，讓「下架封存與時光存檔」的功能指引更加清晰易用。
+
+更新日期：2026-05-28
+- 建立本地寫作與部落格管理 CLI 助手 manage_blog.py，支援一鍵新增文章（自動生成範本與 100% 安全 JSON 註冊）、分類與標籤管理、安全文章刪除，以及一鍵式本地完整性診斷與 8000 埠測試伺服器整合。
+
+更新日期：2026-05-28
+- 複製第一代大模型小說評測 HTML 報告 benchmark-summary.html 到部落格根目錄，命名為 benchmark-summary-v1.html，進行部落格原生直接託管。
+- 修改 index.html 首頁側邊欄快速導覽，新增 V1.0 歷史評測報告的跳轉通道，並在 assets/css/style.css 中為其設計專屬的淡紫色高亮（accent-link-v1）與動態懸停「時光倒流」逆時針旋轉圖標動畫。
+- 編輯 posts/llm-benchmark.md 文章結尾，嵌入 V1.0 歷史評測報告的直達連結，使讀者能夠流暢進行大語言模型小說寫作能力的跨世代歷史對照。
+
+更新日期：2026-05-28
+- 在首頁右側側邊欄（Sidebar）整合新增「筆記分類」與「快速導覽網站地圖」兩個高科技感實用小工具。
+- 修改 assets/js/app.js，開發出「主次標籤智慧拆分與統計算法」（文章的第一個 tag 視為核心大分類，其餘視為細粒度標籤），動態顯示各分類文章總數，點選大分類可自動平滑滾動並一鍵篩選列表。
+- 修改 assets/css/style.css，為側邊欄新增的小工具量身打造極具未來科技質感與 hover 平滑位移微動畫之 UI 樣式，並針對 v3-report.html 連結進行了獨特的霓虹青高亮（accent-link）設計。
+
+更新日期：2026-05-28
+- 複製大模型小說寫作基準測試互動網頁報告 v3-report.html 到部落格根目錄，使其實現部落格原生直接託管。
+- 編輯修改 posts/llm-benchmark.md，在文章的開頭與列尾處嵌入精美且顯眼的 v3-report.html 互動報告直達通道連結，極大地提升了讀者的整合式閱讀體驗。
+
+更新日期：2026-05-28
+- 導入並發布長篇測試文章《LLM 小說寫作基準測試 V3.0 ── 評測報告與方法論》（posts/llm-benchmark.md）。
+- 更新 posts.json 資料庫，完成 V3.0 評測文章的標籤分類、日期與摘要註冊，成功完成主頁連結與 Markdown 解析的整合測試。
+
+更新日期：2026-05-28
+- 建立部落格寫作與目錄管理手冊 README.md，詳盡說明 Markdown 文章放置位置、posts.json 註冊規範、圖片引用語法以及 Netlify 部署管理指南。
+- 建立 assets/images/ 目錄，並放置 .gitkeep 檔案，便於用戶集中管理文章內圖片與靜態資源，並確保 Git 追蹤。
+
+更新日期：2026-05-28
+- 完成個人 Blog 專案基礎架構（方案 A：純前端靜態方案）的全部代碼建置。
+- 建立首頁 index.html 與文章閱讀頁 post.html，提供自適應響應式佈局與精緻的科技感深色模式。
+- 建立 assets/css/style.css 樣式表，設計包含平滑背景光暈動畫（Nebula Effect）、毛玻璃卡片（Glassmorphism）、按鈕懸停微動畫，以及優異的 Markdown 閱讀字體排版樣式。
+- 建立 assets/js/app.js 腳本，處理 posts.json 文章數據庫讀取、首頁標籤過濾器動態生成與過濾，以及文章頁的 Markdown 動態解析、代碼高亮（Prism.js 整合）與滾動閱讀進度條。
+- 建立 test_blog_server.py，實現一鍵式「專案結構完整度檢查」與「本地 8000 埠測試伺服器」。
+
+更新日期：2026-05-28
+- 初始化部落格基礎目錄結構：assets/css, assets/js, posts。
+- 建立 Update.txt 用於記錄每一次代碼更新。
+- 建立文章索引資料庫 posts.json。
+- 建立首篇 Markdown 測試文章 posts/hello-world.md。
+- 建立 netlify.toml 部署設定檔。

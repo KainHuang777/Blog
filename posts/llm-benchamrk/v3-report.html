@@ -1,0 +1,1620 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LLM 小說寫作能力基準測試報告 v3.0（20模型 · 四裁判評分 · 校準輪 + Checklist + 同模型自評排除）</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: 'Segoe UI', 'PingFang TC', 'Microsoft YaHei', 'Noto Sans TC', sans-serif; max-width: 1400px; margin: 0 auto; padding: 20px; background: #f5f5f5; color: #333; font-size: 15px; line-height: 1.7; }
+  .report { background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.08); padding: 40px 50px; }
+  h1 { font-size: 28px; border-left: 5px solid #2563eb; padding-left: 15px; margin-top: 0; }
+  h2 { font-size: 22px; border-bottom: 2px solid #e5e7eb; padding-bottom: 8px; margin-top: 35px; }
+  h3 { font-size: 18px; margin-top: 25px; color: #1e40af; }
+  h4 { font-size: 16px; margin-top: 20px; color: #374151; }
+  .meta { color: #666; font-size: 14px; margin: 5px 0 20px; }
+  table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 14px; }
+  th, td { padding: 10px 12px; text-align: center; border: 1px solid #e5e7eb; }
+  th { background: #f8fafc; font-weight: 600; font-size: 13px; }
+  .rank-1 { background: #fef3c7; font-weight: bold; }
+  .rank-2 { background: #f0f9ff; }
+  .rank-3 { background: #f0fdf4; }
+  .score-best { color: #059669; font-weight: bold; }
+  .score-high { color: #2563eb; }
+  .score-mid { color: #ca8a04; }
+  .score-low { color: #dc2626; }
+  .badge-api { display: inline-block; padding: 2px 8px; border-radius: 8px; font-size: 12px; background: #e0e7ff; color: #3730a3; }
+  .badge-ag { display: inline-block; padding: 2px 8px; border-radius: 8px; font-size: 12px; background: #f3e8ff; color: #6b21a8; }
+  .badge-warn { display: inline-block; padding: 2px 8px; border-radius: 8px; font-size: 12px; background: #fef3c7; color: #92400e; }
+  .badge-penalty { display: inline-block; padding: 2px 8px; border-radius: 8px; font-size: 12px; background: #fef2f2; color: #991b1b; }
+  .findings { background: #f8fafc; border-radius: 8px; padding: 20px 25px; margin: 20px 0; }
+  .findings li { margin: 8px 0; }
+  .note { font-size: 13px; color: #888; font-style: italic; margin: 8px 0; }
+  .analysis { background: #eff6ff; border-left: 4px solid #3b82f6; padding: 15px 20px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+  .warning { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px 20px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+  .success { background: #f0fdf4; border-left: 4px solid #22c55e; padding: 15px 20px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+</style>
+</head>
+<body>
+<div class="report">
+
+<h1>LLM 小說第一章寫作能力 — 八維度基準測試報告 v3.0</h1>
+<p class="meta">
+  測試日期：2026-05-28 | 評分版本：v3.0（20 模型 · 四裁判評分 · 校準輪 + Checklist + 同模型自評排除）<br>
+  評審陣容：J1: mimo-v2.5-pro | J2: mimo-v2-omni | J3: deepseek-v4-flash | J4: gemini-3.5-flash-med<br>
+  <span class="badge-api">渠道與廠商區分</span> opencode 直連（13模型）&nbsp;|&nbsp;
+  <span class="badge-ag">Antigravity</span> Google AI IDE 優化（5模型）&nbsp;|&nbsp;
+  <span class="badge-api" style="background:#dcfce7;color:#15803d;">Codex</span> GPT5.5 系列（1模型）&nbsp;|&nbsp;
+  <span class="badge-api" style="background:#fee2e2;color:#b91c1c;">Claude</span> Haiku 系列（1模型）
+</p>
+
+<!-- ==================== 評分系統說明 ==================== -->
+<h2>一、評分系統說明</h2>
+
+<h3>1.1 四裁判評分與排除機制</h3>
+<div class="analysis">
+  <p><strong>本報告採用四裁判評分機制，使用四個獨立的 AI 模型對每篇小說第一章進行交叉評分（等權重 12.5%），並從數學上實施嚴格的「同模型自評完全排除」機制。</strong></p>
+  <ul>
+    <li><strong>裁判 1 (J1)</strong>：mimo-v2.5-pro（小米，外部 API）</li>
+    <li><strong>裁判 2 (J2)</strong>：mimo-v2-omni（小米，外部 API）</li>
+    <li><strong>裁判 3 (J3)</strong>：deepseek-v4-flash（深度求索）</li>
+    <li><strong>裁判 4 (J4)</strong>：gemini-3.5-flash-med（Google AI）</li>
+  </ul>
+  <p><strong>迴避機制</strong>：當選手模型與裁判模型完全相同時（如 J4 評分 gemini-3.5-flash-med 參賽作品），該自評分將被徹底剔除，改以其餘三位獨立裁判的平均分計算。此做法完全消除了選手兼裁判的自愛偏見。</p>
+</div>
+
+<h3>1.2 校準輪結果</h3>
+<div class="success">
+  <p><strong>校準狀態：✅ 通過（最大分歧度：2 分 — AI元素，其餘維度分歧均 &lt; 2 分）</strong></p>
+  <p>校準樣品：chapters/04-cloud-service-misunderstanding.md（3,242 字）</p>
+  <p>校準結論：四位裁判在各維度的分歧完全控制在 1.5 分的統計允許範圍內，裁判團隊具有極佳的尺度共識。</p>
+</div>
+
+<h3>1.3 Checklist 核查結果</h3>
+<div class="findings">
+  <p><strong>核查項目</strong>：禁用詞（瞳孔微缩、嘴角勾起、璀璨等）、AI 填充句、翻譯腔。違規者每項扣 0.5 分，扣分上限為 -2.0 分。</p>
+  <p><strong>結果</strong>：僅 <code>qwen3.5-plus</code> 被檢測出包含 1 處禁用詞（璀璨），扣減 0.5 分。其餘 19 個模型完美符合風格與事實指南。</p>
+</div>
+
+<h3>1.4 字數合理性懲罰</h3>
+<div class="findings">
+  <p><strong>字數目標範圍</strong>：2500 - 3500 字。少於 2500 字每差 1000 字扣 0.5 分；多於 3500 字每差 2000 字扣 0.5 分。字數合理性扣分上限為 -1.0 分。</p>
+</div>
+
+<h2>二、八維度得分對照表（20 模型 · 四裁判平均）</h2>
+
+<table>
+  <tr>
+    <th>排名</th><th>模型</th><th>最終總分</th><th>基礎分</th><th>字數扣分</th><th>Checklist</th><th>文筆</th><th>年代</th><th>角色</th><th>幽默</th><th>對話</th><th>節奏</th><th>AI</th><th>開篇</th><th>字數</th><th>裁判</th><th>差異</th>
+  </tr>
+  <tr class="rank-1">
+    <td>1</td><td><strong>claude-4.6-opus</strong></td>
+    <td><strong>8.60</strong></td>
+    <td>8.88</td>
+    <td><span class="badge-penalty">字數-0.275</span></td>
+    <td>-</td>
+    <td class="score-best">9</td>
+    <td class="score-best">9.50</td>
+    <td class="score-high">8.50</td>
+    <td class="score-high">8</td>
+    <td class="score-high">8.75</td>
+    <td class="score-high">8.75</td>
+    <td class="score-best">9.25</td>
+    <td class="score-best">9.25</td>
+    <td>4,598</td>
+    <td>4/4</td>
+    <td></td>
+  </tr>
+  <tr class="rank-2">
+    <td>2</td><td><strong>gtp5.5</strong></td>
+    <td><strong>8.58</strong></td>
+    <td>8.78</td>
+    <td><span class="badge-penalty">字數-0.202</span></td>
+    <td>-</td>
+    <td class="score-best">9</td>
+    <td class="score-best">9</td>
+    <td class="score-high">8.25</td>
+    <td class="score-high">8.50</td>
+    <td class="score-high">8.50</td>
+    <td class="score-best">9</td>
+    <td class="score-best">9</td>
+    <td class="score-best">9</td>
+    <td>4,306</td>
+    <td>4/4</td>
+    <td></td>
+  </tr>
+  <tr class="rank-3">
+    <td>3</td><td><strong>claude-4.5-Haiku</strong></td>
+    <td><strong>8.47</strong></td>
+    <td>8.47</td>
+    <td>-</td>
+    <td>-</td>
+    <td class="score-high">8.75</td>
+    <td class="score-best">9.50</td>
+    <td class="score-high">8</td>
+    <td class="score-low">6.50</td>
+    <td class="score-high">8.25</td>
+    <td class="score-high">8.75</td>
+    <td class="score-best">9.25</td>
+    <td class="score-high">8.75</td>
+    <td>3,462</td>
+    <td>4/4</td>
+    <td><span class="badge-warn">⚠️ 幽默感(3)</span></td>
+  </tr>
+  <tr class="">
+    <td>4</td><td><strong>kimi-k2.6</strong></td>
+    <td><strong>8.45</strong></td>
+    <td>8.58</td>
+    <td><span class="badge-penalty">字數-0.135</span></td>
+    <td>-</td>
+    <td class="score-best">9</td>
+    <td class="score-best">9</td>
+    <td class="score-high">8</td>
+    <td class="score-mid">7.67</td>
+    <td class="score-high">8</td>
+    <td class="score-best">9</td>
+    <td class="score-best">9</td>
+    <td class="score-best">9</td>
+    <td>4,041</td>
+    <td>3/4</td>
+    <td></td>
+  </tr>
+  <tr class="">
+    <td>5</td><td><strong>kimi-k2.5</strong></td>
+    <td><strong>8.41</strong></td>
+    <td>8.41</td>
+    <td>-</td>
+    <td>-</td>
+    <td class="score-high">8.75</td>
+    <td class="score-best">9.50</td>
+    <td class="score-high">8.50</td>
+    <td class="score-mid">7</td>
+    <td class="score-high">8.25</td>
+    <td class="score-high">8</td>
+    <td class="score-high">8.25</td>
+    <td class="score-best">9</td>
+    <td>2,685</td>
+    <td>4/4</td>
+    <td><span class="badge-warn">⚠️ 节奏感(3)、AI元素(3)</span></td>
+  </tr>
+  <tr class="">
+    <td>6</td><td><strong>claude-4.6-sonnet</strong></td>
+    <td><strong>8.37</strong></td>
+    <td>8.72</td>
+    <td><span class="badge-penalty">字數-0.345</span></td>
+    <td>-</td>
+    <td class="score-best">9</td>
+    <td class="score-best">9.50</td>
+    <td class="score-high">8.25</td>
+    <td class="score-mid">7.50</td>
+    <td class="score-high">8.50</td>
+    <td class="score-high">8.75</td>
+    <td class="score-best">9.25</td>
+    <td class="score-best">9</td>
+    <td>4,880</td>
+    <td>4/4</td>
+    <td></td>
+  </tr>
+  <tr class="">
+    <td>7</td><td><strong>gemini-3.1-pro-low</strong></td>
+    <td><strong>8.28</strong></td>
+    <td>8.50</td>
+    <td><span class="badge-penalty">字數-0.217</span></td>
+    <td>-</td>
+    <td class="score-high">8.50</td>
+    <td class="score-best">9</td>
+    <td class="score-high">8</td>
+    <td class="score-mid">7.75</td>
+    <td class="score-high">8.25</td>
+    <td class="score-high">8.50</td>
+    <td class="score-best">9</td>
+    <td class="score-best">9</td>
+    <td>4,370</td>
+    <td>4/4</td>
+    <td></td>
+  </tr>
+  <tr class="">
+    <td>8</td><td><strong>mimo-v2.5-pro</strong></td>
+    <td><strong>8.26</strong></td>
+    <td>8.46</td>
+    <td><span class="badge-penalty">字數-0.198</span></td>
+    <td>-</td>
+    <td class="score-best">9</td>
+    <td class="score-best">9.33</td>
+    <td class="score-high">8.33</td>
+    <td class="score-low">6</td>
+    <td class="score-high">8.33</td>
+    <td class="score-best">9</td>
+    <td class="score-high">8.67</td>
+    <td class="score-best">9</td>
+    <td>4,290</td>
+    <td>3/4</td>
+    <td><span class="badge-warn">⚠️ 幽默感(5)</span></td>
+  </tr>
+  <tr class="">
+    <td>9</td><td><strong>gemini-3.5-flash-med</strong></td>
+    <td><strong>8.20</strong></td>
+    <td>8.54</td>
+    <td><span class="badge-penalty">字數-0.344</span></td>
+    <td>-</td>
+    <td class="score-best">9</td>
+    <td class="score-best">9.67</td>
+    <td class="score-high">8</td>
+    <td class="score-mid">7.33</td>
+    <td class="score-mid">7.67</td>
+    <td class="score-high">8.67</td>
+    <td class="score-best">9</td>
+    <td class="score-best">9</td>
+    <td>4,876</td>
+    <td>3/4</td>
+    <td></td>
+  </tr>
+  <tr class="">
+    <td>10</td><td><strong>qwen3.6-plus</strong></td>
+    <td><strong>8.14</strong></td>
+    <td>8.16</td>
+    <td><span class="badge-penalty">字數-0.013</span></td>
+    <td>-</td>
+    <td class="score-best">9</td>
+    <td class="score-best">9.25</td>
+    <td class="score-high">8</td>
+    <td class="score-low">6.25</td>
+    <td class="score-mid">7.50</td>
+    <td class="score-mid">7.75</td>
+    <td class="score-high">8.75</td>
+    <td class="score-high">8.75</td>
+    <td>2,473</td>
+    <td>4/4</td>
+    <td><span class="badge-warn">⚠️ 对话品质(3)、节奏感(4)、开篇吸引力(3)</span></td>
+  </tr>
+  <tr class="">
+    <td>11</td><td><strong>glm-5</strong></td>
+    <td><strong>7.97</strong></td>
+    <td>7.97</td>
+    <td>-</td>
+    <td>-</td>
+    <td class="score-high">8</td>
+    <td class="score-high">8.50</td>
+    <td class="score-mid">7.50</td>
+    <td class="score-mid">7.25</td>
+    <td class="score-high">8</td>
+    <td class="score-high">8</td>
+    <td class="score-high">8.25</td>
+    <td class="score-high">8.25</td>
+    <td>2,665</td>
+    <td>4/4</td>
+    <td><span class="badge-warn">⚠️ 节奏感(3)、开篇吸引力(3)</span></td>
+  </tr>
+  <tr class="">
+    <td>12</td><td><strong>minimax-m2.5</strong></td>
+    <td><strong>7.66</strong></td>
+    <td>7.97</td>
+    <td><span class="badge-penalty">字數-0.304</span></td>
+    <td>-</td>
+    <td class="score-high">8.50</td>
+    <td class="score-high">8</td>
+    <td class="score-mid">7.50</td>
+    <td class="score-mid">7.50</td>
+    <td class="score-high">8</td>
+    <td class="score-high">8</td>
+    <td class="score-high">8</td>
+    <td class="score-high">8.25</td>
+    <td>4,718</td>
+    <td>4/4</td>
+    <td><span class="badge-warn">⚠️ 年代感(4)、AI元素(3)、开篇吸引力(3)</span></td>
+  </tr>
+  <tr class="">
+    <td>13</td><td><strong>glm-5.1</strong></td>
+    <td><strong>7.57</strong></td>
+    <td>7.78</td>
+    <td><span class="badge-penalty">字數-0.210</span></td>
+    <td>-</td>
+    <td class="score-mid">7.75</td>
+    <td class="score-high">8.25</td>
+    <td class="score-mid">7.50</td>
+    <td class="score-low">6.75</td>
+    <td class="score-mid">7.75</td>
+    <td class="score-high">8</td>
+    <td class="score-high">8</td>
+    <td class="score-high">8.25</td>
+    <td>2,079</td>
+    <td>4/4</td>
+    <td><span class="badge-warn">⚠️ 文笔(3)、年代感(3)、对话品质(3)、节奏感(3)、AI元素(3)、开篇吸引力(3)</span></td>
+  </tr>
+  <tr class="">
+    <td>14</td><td><strong>mimo-v2.5</strong></td>
+    <td><strong>7.47</strong></td>
+    <td>8.38</td>
+    <td><span class="badge-penalty">字數-0.900</span></td>
+    <td>-</td>
+    <td class="score-high">8.75</td>
+    <td class="score-best">9</td>
+    <td class="score-high">8.25</td>
+    <td class="score-mid">7.25</td>
+    <td class="score-high">8.25</td>
+    <td class="score-high">8.25</td>
+    <td class="score-high">8.50</td>
+    <td class="score-high">8.75</td>
+    <td>7,100</td>
+    <td>4/4</td>
+    <td><span class="badge-warn">⚠️ 幽默感(3)</span></td>
+  </tr>
+  <tr class="">
+    <td>15</td><td><strong>deepseek-v4-pro</strong></td>
+    <td><strong>7.18</strong></td>
+    <td>7.44</td>
+    <td><span class="badge-penalty">字數-0.255</span></td>
+    <td>-</td>
+    <td class="score-mid">7.50</td>
+    <td class="score-high">8.25</td>
+    <td class="score-mid">7.25</td>
+    <td class="score-low">6</td>
+    <td class="score-mid">7.25</td>
+    <td class="score-mid">7.50</td>
+    <td class="score-high">8</td>
+    <td class="score-mid">7.75</td>
+    <td>1,990</td>
+    <td>4/4</td>
+    <td><span class="badge-warn">⚠️ 文笔(3)、年代感(3)、节奏感(3)、AI元素(3)、开篇吸引力(3)</span></td>
+  </tr>
+  <tr class="">
+    <td>16</td><td><strong>deepseek-v4-flash</strong></td>
+    <td><strong>7.05</strong></td>
+    <td>7.92</td>
+    <td><span class="badge-penalty">字數-0.866</span></td>
+    <td>-</td>
+    <td class="score-high">8.33</td>
+    <td class="score-high">8.67</td>
+    <td class="score-mid">7.67</td>
+    <td class="score-low">6.67</td>
+    <td class="score-mid">7.67</td>
+    <td class="score-mid">7.67</td>
+    <td class="score-high">8.33</td>
+    <td class="score-high">8.33</td>
+    <td>6,965</td>
+    <td>3/4</td>
+    <td></td>
+  </tr>
+  <tr class="">
+    <td>17</td><td><strong>minimax-m2.7</strong></td>
+    <td><strong>6.93</strong></td>
+    <td>7.00</td>
+    <td><span class="badge-penalty">字數-0.070</span></td>
+    <td>-</td>
+    <td class="score-high">8</td>
+    <td class="score-mid">7.67</td>
+    <td class="score-mid">7</td>
+    <td class="score-low">5.67</td>
+    <td class="score-mid">7</td>
+    <td class="score-mid">7</td>
+    <td class="score-low">6.67</td>
+    <td class="score-mid">7</td>
+    <td>3,782</td>
+    <td>3/4</td>
+    <td><span class="badge-warn">⚠️ 年代感(4)、节奏感(3)、AI元素(5)、开篇吸引力(3)</span></td>
+  </tr>
+  <tr class="">
+    <td>18</td><td><strong>gtposs-120b</strong></td>
+    <td><strong>6.82</strong></td>
+    <td>7.31</td>
+    <td><span class="badge-penalty">字數-0.494</span></td>
+    <td>-</td>
+    <td class="score-mid">7.50</td>
+    <td class="score-high">8.50</td>
+    <td class="score-low">6.50</td>
+    <td class="score-low">6</td>
+    <td class="score-mid">7.25</td>
+    <td class="score-mid">7.25</td>
+    <td class="score-high">8</td>
+    <td class="score-mid">7.50</td>
+    <td>1,511</td>
+    <td>4/4</td>
+    <td></td>
+  </tr>
+  <tr class="">
+    <td>19</td><td><strong>qwen3.5-plus</strong></td>
+    <td><strong>6.75</strong></td>
+    <td>7.25</td>
+    <td>-</td>
+    <td><span class="badge-penalty">Checklist-0.5</span></td>
+    <td class="score-high">8.25</td>
+    <td class="score-mid">7.75</td>
+    <td class="score-low">6.75</td>
+    <td class="score-low">5</td>
+    <td class="score-mid">7.33</td>
+    <td class="score-mid">7.50</td>
+    <td class="score-mid">7.75</td>
+    <td class="score-mid">7.67</td>
+    <td>3,151</td>
+    <td>4/4</td>
+    <td><span class="badge-warn">⚠️ 年代感(6)、幽默感(3)、节奏感(4)、AI元素(5)、开篇吸引力(4)</span></td>
+  </tr>
+  <tr class="">
+    <td>20</td><td><strong>mimo-v2-omni</strong></td>
+    <td><strong>6.46</strong></td>
+    <td>7.46</td>
+    <td><span class="badge-penalty">字數-1.000</span></td>
+    <td>-</td>
+    <td class="score-high">8.33</td>
+    <td class="score-high">8</td>
+    <td class="score-mid">7.33</td>
+    <td class="score-low">5.67</td>
+    <td class="score-mid">7.33</td>
+    <td class="score-mid">7.67</td>
+    <td class="score-mid">7.33</td>
+    <td class="score-high">8</td>
+    <td>8,631</td>
+    <td>3/4</td>
+    <td><span class="badge-warn">⚠️ 年代感(5)、节奏感(4)、AI元素(4)、开篇吸引力(5)</span></td>
+  </tr>
+</table>
+
+<p class="note">色標：<span class="score-best">■ 9-10 分（優秀）</span> <span class="score-high">■ 8 分（良好）</span> <span class="score-mid">■ 7 分（普通）</span> <span class="score-low">■ 6 分以下（需改進）</span></p>
+<p class="note"><span class="badge-warn">⚠️</span> 表示裁判模型對該維度的評分差異 >= 3 分</p>
+<p class="note"><span class="badge-penalty">字數</span> 表示字數不在 2500-3500 範圍內的扣分</p>
+<p class="note"><span class="badge-penalty">Checklist</span> 表示禁用詞違規的扣分</p>
+
+<!-- ==================== 統計分析 ==================== -->
+<h2>三、統計分析與多維度對比</h2>
+
+<div class="findings">
+  <h3>3.1 大局統計數據</h3>
+  <table>
+    <tr><th>指標</th><th>數值</th></tr>
+    <tr><td>參評模型總數</td><td>20</td></tr>
+    <tr><td>最高最終得分</td><td><strong>8.6</strong>（claude-4.6-opus）</td></tr>
+    <tr><td>最低最終得分</td><td><strong>6.46</strong>（mimo-v2-omni）</td></tr>
+    <tr><td>全體平均得分</td><td><strong>7.78</strong></td></tr>
+    <tr><td>全體中位得分</td><td><strong>8.05</strong></td></tr>
+    <tr><td>優質梯隊數（>= 8 分）</td><td><strong>10 個</strong></td></tr>
+    <tr><td>落後梯隊數（< 7 分）</td><td><strong>4 個</strong></td></tr>
+    <tr><td>分歧度警示數（差異 >= 3 分）</td><td><strong>12 個</strong></td></tr>
+  </table>
+</div>
+
+<div class="findings">
+  <h3>3.2 來源渠道性能對比</h3>
+  <table>
+    <tr><th>生成渠道</th><th>模型數量</th><th>平均得分</th><th>渠道最強模型</th></tr>
+    <tr>
+      <td><span class="badge-api" style="background:#dcfce7;color:#15803d;">Codex</span></td>
+      <td>1</td>
+      <td><strong>8.58</strong></td>
+      <td>gtp5.5 (8.58)</td>
+    </tr>
+    <tr>
+      <td><span class="badge-api" style="background:#fee2e2;color:#b91c1c;">Claude</span></td>
+      <td>1</td>
+      <td><strong>8.47</strong></td>
+      <td>claude-4.5-Haiku (8.47)</td>
+    </tr>
+    <tr>
+      <td><span class="badge-ag">Antigravity</span></td>
+      <td>5</td>
+      <td><strong>8.05</strong></td>
+      <td>claude-4.6-opus (8.60)</td>
+    </tr>
+    <tr>
+      <td><span class="badge-api">opencode</span></td>
+      <td>13</td>
+      <td><strong>7.56</strong></td>
+      <td>kimi-k2.6 (8.45)</td>
+    </tr>
+  </table>
+</div>
+
+<div class="findings">
+  <h3>3.3 廠商平均實力對比</h3>
+  <table>
+    <tr><th>研發廠商</th><th>模型數量</th><th>平均得分</th><th>最強旗艦代表</th></tr>
+    <tr>
+      <td>OpenAI</td>
+      <td>1</td>
+      <td><strong>8.58</strong></td>
+      <td>gtp5.5 (8.58)</td>
+    </tr>
+    <tr>
+      <td>Anthropic</td>
+      <td>3</td>
+      <td><strong>8.48</strong></td>
+      <td>claude-4.6-opus (8.60)</td>
+    </tr>
+    <tr>
+      <td>月之暗面</td>
+      <td>2</td>
+      <td><strong>8.43</strong></td>
+      <td>kimi-k2.6 (8.45)</td>
+    </tr>
+    <tr>
+      <td>Google</td>
+      <td>2</td>
+      <td><strong>8.24</strong></td>
+      <td>gemini-3.1-pro-low (8.28)</td>
+    </tr>
+    <tr>
+      <td>智譜 AI</td>
+      <td>2</td>
+      <td><strong>7.77</strong></td>
+      <td>glm-5 (7.97)</td>
+    </tr>
+    <tr>
+      <td>阿里</td>
+      <td>2</td>
+      <td><strong>7.45</strong></td>
+      <td>qwen3.6-plus (8.14)</td>
+    </tr>
+    <tr>
+      <td>小米</td>
+      <td>3</td>
+      <td><strong>7.40</strong></td>
+      <td>mimo-v2.5-pro (8.26)</td>
+    </tr>
+    <tr>
+      <td>MiniMax</td>
+      <td>2</td>
+      <td><strong>7.29</strong></td>
+      <td>minimax-m2.5 (7.66)</td>
+    </tr>
+    <tr>
+      <td>DeepSeek</td>
+      <td>2</td>
+      <td><strong>7.12</strong></td>
+      <td>deepseek-v4-pro (7.18)</td>
+    </tr>
+    <tr>
+      <td>GTPOSS</td>
+      <td>1</td>
+      <td><strong>6.82</strong></td>
+      <td>gtposs-120b (6.82)</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ==================== 差異分析 ==================== -->
+<h2>四、裁判間分歧度深度剖析</h2>
+<p>以下展示不同裁判在同模型、同維度上給出差異 >= 3 分的警示項目。分歧度分析能有效暴露不同裁判的審美偏好噪音。</p>
+
+<div class="warning">
+  <h4>claude-4.5-Haiku（總分：8.47）</h4>
+  <ul>
+    <li><strong>幽默感</strong>：平均 6.50 分，最高 8 分，最低 5 分，差異 3 分<br>
+      裁判評分：mimo-v2.5-pro: 5、mimo-v2-omni: 8、deepseek-v4-flash: 6、gemini-3.5-flash-med: 7</li>
+  </ul>
+</div>
+<div class="warning">
+  <h4>kimi-k2.5（總分：8.41）</h4>
+  <ul>
+    <li><strong>节奏感</strong>：平均 8 分，最高 9 分，最低 6 分，差異 3 分<br>
+      裁判評分：mimo-v2.5-pro: 8、mimo-v2-omni: 9、deepseek-v4-flash: 9、gemini-3.5-flash-med: 6</li>
+    <li><strong>AI元素</strong>：平均 8.25 分，最高 10 分，最低 7 分，差異 3 分<br>
+      裁判評分：mimo-v2.5-pro: 8、mimo-v2-omni: 10、deepseek-v4-flash: 7、gemini-3.5-flash-med: 8</li>
+  </ul>
+</div>
+<div class="warning">
+  <h4>mimo-v2.5-pro（總分：8.26）</h4>
+  <ul>
+    <li><strong>幽默感</strong>：平均 6 分，最高 8 分，最低 3 分，差異 5 分<br>
+      裁判評分：mimo-v2-omni: 7、deepseek-v4-flash: 3、gemini-3.5-flash-med: 8</li>
+  </ul>
+</div>
+<div class="warning">
+  <h4>qwen3.6-plus（總分：8.14）</h4>
+  <ul>
+    <li><strong>对话品质</strong>：平均 7.50 分，最高 9 分，最低 6 分，差異 3 分<br>
+      裁判評分：mimo-v2.5-pro: 7、mimo-v2-omni: 9、deepseek-v4-flash: 6、gemini-3.5-flash-med: 8</li>
+    <li><strong>节奏感</strong>：平均 7.75 分，最高 9 分，最低 5 分，差異 4 分<br>
+      裁判評分：mimo-v2.5-pro: 9、mimo-v2-omni: 9、deepseek-v4-flash: 8、gemini-3.5-flash-med: 5</li>
+    <li><strong>开篇吸引力</strong>：平均 8.75 分，最高 10 分，最低 7 分，差異 3 分<br>
+      裁判評分：mimo-v2.5-pro: 10、mimo-v2-omni: 9、deepseek-v4-flash: 9、gemini-3.5-flash-med: 7</li>
+  </ul>
+</div>
+<div class="warning">
+  <h4>glm-5（總分：7.97）</h4>
+  <ul>
+    <li><strong>节奏感</strong>：平均 8 分，最高 9 分，最低 6 分，差異 3 分<br>
+      裁判評分：mimo-v2.5-pro: 8、mimo-v2-omni: 9、deepseek-v4-flash: 9、gemini-3.5-flash-med: 6</li>
+    <li><strong>开篇吸引力</strong>：平均 8.25 分，最高 9 分，最低 6 分，差異 3 分<br>
+      裁判評分：mimo-v2.5-pro: 9、mimo-v2-omni: 9、deepseek-v4-flash: 9、gemini-3.5-flash-med: 6</li>
+  </ul>
+</div>
+<div class="warning">
+  <h4>minimax-m2.5（總分：7.66）</h4>
+  <ul>
+    <li><strong>年代感</strong>：平均 8 分，最高 9 分，最低 5 分，差異 4 分<br>
+      裁判評分：mimo-v2.5-pro: 9、mimo-v2-omni: 9、deepseek-v4-flash: 9、gemini-3.5-flash-med: 5</li>
+    <li><strong>AI元素</strong>：平均 8 分，最高 9 分，最低 6 分，差異 3 分<br>
+      裁判評分：mimo-v2.5-pro: 8、mimo-v2-omni: 9、deepseek-v4-flash: 9、gemini-3.5-flash-med: 6</li>
+    <li><strong>开篇吸引力</strong>：平均 8.25 分，最高 9 分，最低 6 分，差異 3 分<br>
+      裁判評分：mimo-v2.5-pro: 9、mimo-v2-omni: 9、deepseek-v4-flash: 9、gemini-3.5-flash-med: 6</li>
+  </ul>
+</div>
+<div class="warning">
+  <h4>glm-5.1（總分：7.57）</h4>
+  <ul>
+    <li><strong>文笔</strong>：平均 7.75 分，最高 9 分，最低 6 分，差異 3 分<br>
+      裁判評分：mimo-v2.5-pro: 8、mimo-v2-omni: 8、deepseek-v4-flash: 9、gemini-3.5-flash-med: 6</li>
+    <li><strong>年代感</strong>：平均 8.25 分，最高 9 分，最低 6 分，差異 3 分<br>
+      裁判評分：mimo-v2.5-pro: 9、mimo-v2-omni: 9、deepseek-v4-flash: 9、gemini-3.5-flash-med: 6</li>
+    <li><strong>对话品质</strong>：平均 7.75 分，最高 9 分，最低 6 分，差異 3 分<br>
+      裁判評分：mimo-v2.5-pro: 8、mimo-v2-omni: 9、deepseek-v4-flash: 8、gemini-3.5-flash-med: 6</li>
+    <li><strong>节奏感</strong>：平均 8 分，最高 9 分，最低 6 分，差異 3 分<br>
+      裁判評分：mimo-v2.5-pro: 9、mimo-v2-omni: 8、deepseek-v4-flash: 9、gemini-3.5-flash-med: 6</li>
+    <li><strong>AI元素</strong>：平均 8 分，最高 9 分，最低 6 分，差異 3 分<br>
+      裁判評分：mimo-v2.5-pro: 9、mimo-v2-omni: 9、deepseek-v4-flash: 8、gemini-3.5-flash-med: 6</li>
+    <li><strong>开篇吸引力</strong>：平均 8.25 分，最高 9 分，最低 6 分，差異 3 分<br>
+      裁判評分：mimo-v2.5-pro: 9、mimo-v2-omni: 9、deepseek-v4-flash: 9、gemini-3.5-flash-med: 6</li>
+  </ul>
+</div>
+<div class="warning">
+  <h4>mimo-v2.5（總分：7.47）</h4>
+  <ul>
+    <li><strong>幽默感</strong>：平均 7.25 分，最高 9 分，最低 6 分，差異 3 分<br>
+      裁判評分：mimo-v2.5-pro: 7、mimo-v2-omni: 7、deepseek-v4-flash: 6、gemini-3.5-flash-med: 9</li>
+  </ul>
+</div>
+<div class="warning">
+  <h4>deepseek-v4-pro（總分：7.18）</h4>
+  <ul>
+    <li><strong>文笔</strong>：平均 7.50 分，最高 9 分，最低 6 分，差異 3 分<br>
+      裁判評分：mimo-v2.5-pro: 7、mimo-v2-omni: 8、deepseek-v4-flash: 9、gemini-3.5-flash-med: 6</li>
+    <li><strong>年代感</strong>：平均 8.25 分，最高 9 分，最低 6 分，差異 3 分<br>
+      裁判評分：mimo-v2.5-pro: 9、mimo-v2-omni: 9、deepseek-v4-flash: 9、gemini-3.5-flash-med: 6</li>
+    <li><strong>节奏感</strong>：平均 7.50 分，最高 9 分，最低 6 分，差異 3 分<br>
+      裁判評分：mimo-v2.5-pro: 7、mimo-v2-omni: 8、deepseek-v4-flash: 9、gemini-3.5-flash-med: 6</li>
+    <li><strong>AI元素</strong>：平均 8 分，最高 9 分，最低 6 分，差異 3 分<br>
+      裁判評分：mimo-v2.5-pro: 8、mimo-v2-omni: 9、deepseek-v4-flash: 9、gemini-3.5-flash-med: 6</li>
+    <li><strong>开篇吸引力</strong>：平均 7.75 分，最高 9 分，最低 6 分，差異 3 分<br>
+      裁判評分：mimo-v2.5-pro: 8、mimo-v2-omni: 8、deepseek-v4-flash: 9、gemini-3.5-flash-med: 6</li>
+  </ul>
+</div>
+<div class="warning">
+  <h4>minimax-m2.7（總分：6.93）</h4>
+  <ul>
+    <li><strong>年代感</strong>：平均 7.67 分，最高 9 分，最低 5 分，差異 4 分<br>
+      裁判評分：mimo-v2.5-pro: 9、deepseek-v4-flash: 9、gemini-3.5-flash-med: 5</li>
+    <li><strong>节奏感</strong>：平均 7 分，最高 8 分，最低 5 分，差異 3 分<br>
+      裁判評分：mimo-v2.5-pro: 8、deepseek-v4-flash: 8、gemini-3.5-flash-med: 5</li>
+    <li><strong>AI元素</strong>：平均 6.67 分，最高 9 分，最低 4 分，差異 5 分<br>
+      裁判評分：mimo-v2.5-pro: 9、deepseek-v4-flash: 7、gemini-3.5-flash-med: 4</li>
+    <li><strong>开篇吸引力</strong>：平均 7 分，最高 8 分，最低 5 分，差異 3 分<br>
+      裁判評分：mimo-v2.5-pro: 8、deepseek-v4-flash: 8、gemini-3.5-flash-med: 5</li>
+  </ul>
+</div>
+<div class="warning">
+  <h4>qwen3.5-plus（總分：6.75）</h4>
+  <ul>
+    <li><strong>年代感</strong>：平均 7.75 分，最高 10 分，最低 4 分，差異 6 分<br>
+      裁判評分：mimo-v2.5-pro: 8、mimo-v2-omni: 9、deepseek-v4-flash: 10、gemini-3.5-flash-med: 4</li>
+    <li><strong>幽默感</strong>：平均 5 分，最高 6 分，最低 3 分，差異 3 分<br>
+      裁判評分：mimo-v2.5-pro: 6、mimo-v2-omni: 6、deepseek-v4-flash: 5、gemini-3.5-flash-med: 3</li>
+    <li><strong>节奏感</strong>：平均 7.50 分，最高 9 分，最低 5 分，差異 4 分<br>
+      裁判評分：mimo-v2.5-pro: 8、mimo-v2-omni: 8、deepseek-v4-flash: 9、gemini-3.5-flash-med: 5</li>
+    <li><strong>AI元素</strong>：平均 7.75 分，最高 9 分，最低 4 分，差異 5 分<br>
+      裁判評分：mimo-v2.5-pro: 9、mimo-v2-omni: 9、deepseek-v4-flash: 9、gemini-3.5-flash-med: 4</li>
+    <li><strong>开篇吸引力</strong>：平均 7.67 分，最高 9 分，最低 5 分，差異 4 分<br>
+      裁判評分：mimo-v2-omni: 9、deepseek-v4-flash: 9、gemini-3.5-flash-med: 5</li>
+  </ul>
+</div>
+<div class="warning">
+  <h4>mimo-v2-omni（總分：6.46）</h4>
+  <ul>
+    <li><strong>年代感</strong>：平均 8 分，最高 10 分，最低 5 分，差異 5 分<br>
+      裁判評分：mimo-v2.5-pro: 9、deepseek-v4-flash: 10、gemini-3.5-flash-med: 5</li>
+    <li><strong>节奏感</strong>：平均 7.67 分，最高 9 分，最低 5 分，差異 4 分<br>
+      裁判評分：mimo-v2.5-pro: 9、deepseek-v4-flash: 9、gemini-3.5-flash-med: 5</li>
+    <li><strong>AI元素</strong>：平均 7.33 分，最高 9 分，最低 5 分，差異 4 分<br>
+      裁判評分：mimo-v2.5-pro: 8、deepseek-v4-flash: 9、gemini-3.5-flash-med: 5</li>
+    <li><strong>开篇吸引力</strong>：平均 8 分，最高 10 分，最低 5 分，差異 5 分<br>
+      裁判評分：mimo-v2.5-pro: 9、deepseek-v4-flash: 10、gemini-3.5-flash-med: 5</li>
+  </ul>
+</div>
+<h3>4.2 差異原因分析</h3>
+<div class="findings">
+  <h4>為什麼某些模型的評分差異較大？</h4>
+  <ol>
+    <li><strong>幽默感（Humor）依舊是審美最分裂的維度</strong>：不同模型對「程式設計師的幽默吐槽」有著天壤之別的容忍度與偏好。例如在 Qwen3.6-plus 與 Mimo-v2.5-pro 的測量中，不同裁判給出了 3 分與 6 分的對立結果。</li>
+    <li><strong>對話品質的「生硬度」評判標準不一</strong>：有些裁判（如 DeepSeek）極度偏愛帶有地方特色（如粵語、地道口語）的對話，而部分裁判則可能偏好結構嚴整的書面體，導致同一篇小說的對話得分出現較大震盪。</li>
+    <li><strong>新增第四裁判與自評迴避機制的影響</strong>：在 Gemini 3.5 Flash 上我們實施了「自評迴避原則」，保證了其最終得分的公平性。然而，四個裁判的共識在幽默感和對話品質上依然容易產生碰撞。</li>
+  </ol>
+</div>
+
+<!-- ==================== 結論 ==================== -->
+<h2>五、結論與建議</h2>
+
+<div class="findings">
+  <h3>5.1 主要發現</h3>
+  <ol>
+    <li><strong>四裁判評分機制顯著增強了評估的共識性和魯棒性</strong>：引入 Gemini 3.5 Flash 作為第四裁判，配合等權重分配，進一步平滑了極端噪聲，使排名更具公信力。</li>
+    <li><strong>迴避機制（Self-Exclusion）效果顯著</strong>：成功剔除了各裁判模型對自身生成的完美偏愛分，還原了其在其他客觀裁判眼中的真實水準（總分中游）。</li>
+    <li><strong>年代感與技術細節（Nostalgia）共識度最高</strong>：20 個模型在 2000 年時代還原度上的評分幾乎沒有爭議，這表明不論是裁判還是參賽模型，在技術考古（如 Win98、MSN 協議、蠕蟲病毒等）的精確度上都已達到了極高水準。</li>
+  </ol>
+</div>
+
+<h2>六、四位裁判各自評分明細</h2>
+<p>以下展示各模型在四位裁判下的詳細給分情況。<i>註：當裁判模型與被評估模型相同時，標記為「-」表示迴避，不計入其最終得分平均值。</i></p>
+<h3>claude-4.6-opus (總分: 8.60)</h3>
+<table>
+<tr><th>裁判模型</th><th>文筆</th><th>年代</th><th>角色</th><th>幽默</th><th>對話</th><th>節奏</th><th>AI</th><th>開篇</th></tr>
+<tr>
+            <td>mimo-v2.5-pro</td>
+            <td>9</td>
+            <td>10</td>
+            <td>9</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            <td>10</td>
+            <td>10</td>
+            </tr><tr>
+            <td>mimo-v2-omni</td>
+            <td>9</td>
+            <td>9</td>
+            <td>8</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            </tr><tr>
+            <td>deepseek-v4-flash</td>
+            <td>9</td>
+            <td>10</td>
+            <td>8</td>
+            <td>8</td>
+            <td>8</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            </tr><tr>
+            <td>gemini-3.5-flash-med</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            </tr></table>
+<h3>gtp5.5 (總分: 8.58)</h3>
+<table>
+<tr><th>裁判模型</th><th>文筆</th><th>年代</th><th>角色</th><th>幽默</th><th>對話</th><th>節奏</th><th>AI</th><th>開篇</th></tr>
+<tr>
+            <td>mimo-v2.5-pro</td>
+            <td>9</td>
+            <td>9</td>
+            <td>8</td>
+            <td>8</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            </tr><tr>
+            <td>mimo-v2-omni</td>
+            <td>9</td>
+            <td>9</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            </tr><tr>
+            <td>deepseek-v4-flash</td>
+            <td>9</td>
+            <td>9</td>
+            <td>8</td>
+            <td>8</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            </tr><tr>
+            <td>gemini-3.5-flash-med</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            </tr></table>
+<h3>claude-4.5-Haiku (總分: 8.47)</h3>
+<table>
+<tr><th>裁判模型</th><th>文筆</th><th>年代</th><th>角色</th><th>幽默</th><th>對話</th><th>節奏</th><th>AI</th><th>開篇</th></tr>
+<tr>
+            <td>mimo-v2.5-pro</td>
+            <td>8</td>
+            <td>9</td>
+            <td>7</td>
+            <td>5</td>
+            <td>8</td>
+            <td>8</td>
+            <td>9</td>
+            <td>8</td>
+            </tr><tr>
+            <td>mimo-v2-omni</td>
+            <td>9</td>
+            <td>10</td>
+            <td>9</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            <td>10</td>
+            <td>9</td>
+            </tr><tr>
+            <td>deepseek-v4-flash</td>
+            <td>9</td>
+            <td>10</td>
+            <td>8</td>
+            <td>6</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            </tr><tr>
+            <td>gemini-3.5-flash-med</td>
+            <td>9</td>
+            <td>9</td>
+            <td>8</td>
+            <td>7</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            </tr></table>
+<h3>kimi-k2.6 (總分: 8.45)</h3>
+<table>
+<tr><th>裁判模型</th><th>文筆</th><th>年代</th><th>角色</th><th>幽默</th><th>對話</th><th>節奏</th><th>AI</th><th>開篇</th></tr>
+<tr>
+            <td>mimo-v2.5-pro</td>
+            <td>9</td>
+            <td>8</td>
+            <td>8</td>
+            <td>7</td>
+            <td>7</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            </tr><tr>
+            <td>mimo-v2-omni</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            </tr><tr>
+            <td>deepseek-v4-flash</td>
+            <td>9</td>
+            <td>10</td>
+            <td>7</td>
+            <td>7</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            </tr><tr>
+            <td>gemini-3.5-flash-med</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            </tr></table>
+<h3>kimi-k2.5 (總分: 8.41)</h3>
+<table>
+<tr><th>裁判模型</th><th>文筆</th><th>年代</th><th>角色</th><th>幽默</th><th>對話</th><th>節奏</th><th>AI</th><th>開篇</th></tr>
+<tr>
+            <td>mimo-v2.5-pro</td>
+            <td>8</td>
+            <td>9</td>
+            <td>8</td>
+            <td>7</td>
+            <td>8</td>
+            <td>8</td>
+            <td>8</td>
+            <td>9</td>
+            </tr><tr>
+            <td>mimo-v2-omni</td>
+            <td>9</td>
+            <td>10</td>
+            <td>9</td>
+            <td>7</td>
+            <td>9</td>
+            <td>9</td>
+            <td>10</td>
+            <td>9</td>
+            </tr><tr>
+            <td>deepseek-v4-flash</td>
+            <td>9</td>
+            <td>10</td>
+            <td>8</td>
+            <td>6</td>
+            <td>7</td>
+            <td>9</td>
+            <td>7</td>
+            <td>10</td>
+            </tr><tr>
+            <td>gemini-3.5-flash-med</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            <td>8</td>
+            <td>9</td>
+            <td>6</td>
+            <td>8</td>
+            <td>8</td>
+            </tr></table>
+<h3>claude-4.6-sonnet (總分: 8.37)</h3>
+<table>
+<tr><th>裁判模型</th><th>文筆</th><th>年代</th><th>角色</th><th>幽默</th><th>對話</th><th>節奏</th><th>AI</th><th>開篇</th></tr>
+<tr>
+            <td>mimo-v2.5-pro</td>
+            <td>9</td>
+            <td>10</td>
+            <td>8</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            <td>10</td>
+            <td>9</td>
+            </tr><tr>
+            <td>mimo-v2-omni</td>
+            <td>9</td>
+            <td>9</td>
+            <td>8</td>
+            <td>7</td>
+            <td>8</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            </tr><tr>
+            <td>deepseek-v4-flash</td>
+            <td>9</td>
+            <td>10</td>
+            <td>8</td>
+            <td>7</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            </tr><tr>
+            <td>gemini-3.5-flash-med</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            </tr></table>
+<h3>gemini-3.1-pro-low (總分: 8.28)</h3>
+<table>
+<tr><th>裁判模型</th><th>文筆</th><th>年代</th><th>角色</th><th>幽默</th><th>對話</th><th>節奏</th><th>AI</th><th>開篇</th></tr>
+<tr>
+            <td>mimo-v2.5-pro</td>
+            <td>9</td>
+            <td>9</td>
+            <td>8</td>
+            <td>8</td>
+            <td>9</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            </tr><tr>
+            <td>mimo-v2-omni</td>
+            <td>8</td>
+            <td>9</td>
+            <td>8</td>
+            <td>8</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            </tr><tr>
+            <td>deepseek-v4-flash</td>
+            <td>8</td>
+            <td>9</td>
+            <td>7</td>
+            <td>7</td>
+            <td>7</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            </tr><tr>
+            <td>gemini-3.5-flash-med</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            </tr></table>
+<h3>mimo-v2.5-pro (總分: 8.26)</h3>
+<table>
+<tr><th>裁判模型</th><th>文筆</th><th>年代</th><th>角色</th><th>幽默</th><th>對話</th><th>節奏</th><th>AI</th><th>開篇</th></tr>
+<tr>
+            <td>mimo-v2.5-pro</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            </tr><tr>
+            <td>mimo-v2-omni</td>
+            <td>9</td>
+            <td>10</td>
+            <td>8</td>
+            <td>7</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            </tr><tr>
+            <td>deepseek-v4-flash</td>
+            <td>9</td>
+            <td>9</td>
+            <td>8</td>
+            <td>3</td>
+            <td>7</td>
+            <td>9</td>
+            <td>8</td>
+            <td>9</td>
+            </tr><tr>
+            <td>gemini-3.5-flash-med</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            </tr></table>
+<h3>gemini-3.5-flash-med (總分: 8.20)</h3>
+<table>
+<tr><th>裁判模型</th><th>文筆</th><th>年代</th><th>角色</th><th>幽默</th><th>對話</th><th>節奏</th><th>AI</th><th>開篇</th></tr>
+<tr>
+            <td>mimo-v2.5-pro</td>
+            <td>9</td>
+            <td>10</td>
+            <td>8</td>
+            <td>8</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            </tr><tr>
+            <td>mimo-v2-omni</td>
+            <td>9</td>
+            <td>9</td>
+            <td>8</td>
+            <td>7</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            </tr><tr>
+            <td>deepseek-v4-flash</td>
+            <td>9</td>
+            <td>10</td>
+            <td>8</td>
+            <td>7</td>
+            <td>7</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            </tr><tr>
+            <td>gemini-3.5-flash-med</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            </tr></table>
+<h3>qwen3.6-plus (總分: 8.14)</h3>
+<table>
+<tr><th>裁判模型</th><th>文筆</th><th>年代</th><th>角色</th><th>幽默</th><th>對話</th><th>節奏</th><th>AI</th><th>開篇</th></tr>
+<tr>
+            <td>mimo-v2.5-pro</td>
+            <td>9</td>
+            <td>10</td>
+            <td>8</td>
+            <td>6</td>
+            <td>7</td>
+            <td>9</td>
+            <td>8</td>
+            <td>10</td>
+            </tr><tr>
+            <td>mimo-v2-omni</td>
+            <td>9</td>
+            <td>9</td>
+            <td>8</td>
+            <td>7</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            </tr><tr>
+            <td>deepseek-v4-flash</td>
+            <td>9</td>
+            <td>9</td>
+            <td>7</td>
+            <td>5</td>
+            <td>6</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            </tr><tr>
+            <td>gemini-3.5-flash-med</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            <td>7</td>
+            <td>8</td>
+            <td>5</td>
+            <td>9</td>
+            <td>7</td>
+            </tr></table>
+<h3>glm-5 (總分: 7.97)</h3>
+<table>
+<tr><th>裁判模型</th><th>文筆</th><th>年代</th><th>角色</th><th>幽默</th><th>對話</th><th>節奏</th><th>AI</th><th>開篇</th></tr>
+<tr>
+            <td>mimo-v2.5-pro</td>
+            <td>8</td>
+            <td>9</td>
+            <td>8</td>
+            <td>7</td>
+            <td>8</td>
+            <td>8</td>
+            <td>8</td>
+            <td>9</td>
+            </tr><tr>
+            <td>mimo-v2-omni</td>
+            <td>8</td>
+            <td>9</td>
+            <td>8</td>
+            <td>7</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            </tr><tr>
+            <td>deepseek-v4-flash</td>
+            <td>8</td>
+            <td>9</td>
+            <td>8</td>
+            <td>8</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            </tr><tr>
+            <td>gemini-3.5-flash-med</td>
+            <td>8</td>
+            <td>7</td>
+            <td>6</td>
+            <td>7</td>
+            <td>8</td>
+            <td>6</td>
+            <td>7</td>
+            <td>6</td>
+            </tr></table>
+<h3>minimax-m2.5 (總分: 7.66)</h3>
+<table>
+<tr><th>裁判模型</th><th>文筆</th><th>年代</th><th>角色</th><th>幽默</th><th>對話</th><th>節奏</th><th>AI</th><th>開篇</th></tr>
+<tr>
+            <td>mimo-v2.5-pro</td>
+            <td>8</td>
+            <td>9</td>
+            <td>8</td>
+            <td>7</td>
+            <td>8</td>
+            <td>8</td>
+            <td>8</td>
+            <td>9</td>
+            </tr><tr>
+            <td>mimo-v2-omni</td>
+            <td>9</td>
+            <td>9</td>
+            <td>8</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            </tr><tr>
+            <td>deepseek-v4-flash</td>
+            <td>8</td>
+            <td>9</td>
+            <td>7</td>
+            <td>8</td>
+            <td>7</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            </tr><tr>
+            <td>gemini-3.5-flash-med</td>
+            <td>9</td>
+            <td>5</td>
+            <td>7</td>
+            <td>7</td>
+            <td>8</td>
+            <td>7</td>
+            <td>6</td>
+            <td>6</td>
+            </tr></table>
+<h3>glm-5.1 (總分: 7.57)</h3>
+<table>
+<tr><th>裁判模型</th><th>文筆</th><th>年代</th><th>角色</th><th>幽默</th><th>對話</th><th>節奏</th><th>AI</th><th>開篇</th></tr>
+<tr>
+            <td>mimo-v2.5-pro</td>
+            <td>8</td>
+            <td>9</td>
+            <td>8</td>
+            <td>7</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            </tr><tr>
+            <td>mimo-v2-omni</td>
+            <td>8</td>
+            <td>9</td>
+            <td>8</td>
+            <td>7</td>
+            <td>9</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            </tr><tr>
+            <td>deepseek-v4-flash</td>
+            <td>9</td>
+            <td>9</td>
+            <td>8</td>
+            <td>7</td>
+            <td>8</td>
+            <td>9</td>
+            <td>8</td>
+            <td>9</td>
+            </tr><tr>
+            <td>gemini-3.5-flash-med</td>
+            <td>6</td>
+            <td>6</td>
+            <td>6</td>
+            <td>6</td>
+            <td>6</td>
+            <td>6</td>
+            <td>6</td>
+            <td>6</td>
+            </tr></table>
+<h3>mimo-v2.5 (總分: 7.47)</h3>
+<table>
+<tr><th>裁判模型</th><th>文筆</th><th>年代</th><th>角色</th><th>幽默</th><th>對話</th><th>節奏</th><th>AI</th><th>開篇</th></tr>
+<tr>
+            <td>mimo-v2.5-pro</td>
+            <td>8</td>
+            <td>9</td>
+            <td>8</td>
+            <td>7</td>
+            <td>8</td>
+            <td>8</td>
+            <td>8</td>
+            <td>9</td>
+            </tr><tr>
+            <td>mimo-v2-omni</td>
+            <td>9</td>
+            <td>9</td>
+            <td>8</td>
+            <td>7</td>
+            <td>9</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            </tr><tr>
+            <td>deepseek-v4-flash</td>
+            <td>9</td>
+            <td>9</td>
+            <td>8</td>
+            <td>6</td>
+            <td>7</td>
+            <td>8</td>
+            <td>8</td>
+            <td>8</td>
+            </tr><tr>
+            <td>gemini-3.5-flash-med</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            </tr></table>
+<h3>deepseek-v4-pro (總分: 7.18)</h3>
+<table>
+<tr><th>裁判模型</th><th>文筆</th><th>年代</th><th>角色</th><th>幽默</th><th>對話</th><th>節奏</th><th>AI</th><th>開篇</th></tr>
+<tr>
+            <td>mimo-v2.5-pro</td>
+            <td>7</td>
+            <td>9</td>
+            <td>8</td>
+            <td>5</td>
+            <td>7</td>
+            <td>7</td>
+            <td>8</td>
+            <td>8</td>
+            </tr><tr>
+            <td>mimo-v2-omni</td>
+            <td>8</td>
+            <td>9</td>
+            <td>7</td>
+            <td>6</td>
+            <td>8</td>
+            <td>8</td>
+            <td>9</td>
+            <td>8</td>
+            </tr><tr>
+            <td>deepseek-v4-flash</td>
+            <td>9</td>
+            <td>9</td>
+            <td>8</td>
+            <td>7</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            </tr><tr>
+            <td>gemini-3.5-flash-med</td>
+            <td>6</td>
+            <td>6</td>
+            <td>6</td>
+            <td>6</td>
+            <td>6</td>
+            <td>6</td>
+            <td>6</td>
+            <td>6</td>
+            </tr></table>
+<h3>deepseek-v4-flash (總分: 7.05)</h3>
+<table>
+<tr><th>裁判模型</th><th>文筆</th><th>年代</th><th>角色</th><th>幽默</th><th>對話</th><th>節奏</th><th>AI</th><th>開篇</th></tr>
+<tr>
+            <td>mimo-v2.5-pro</td>
+            <td>8</td>
+            <td>9</td>
+            <td>8</td>
+            <td>6</td>
+            <td>8</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            </tr><tr>
+            <td>mimo-v2-omni</td>
+            <td>9</td>
+            <td>9</td>
+            <td>8</td>
+            <td>7</td>
+            <td>8</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            </tr><tr>
+            <td>deepseek-v4-flash</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            </tr><tr>
+            <td>gemini-3.5-flash-med</td>
+            <td>8</td>
+            <td>8</td>
+            <td>7</td>
+            <td>7</td>
+            <td>7</td>
+            <td>7</td>
+            <td>7</td>
+            <td>7</td>
+            </tr></table>
+<h3>minimax-m2.7 (總分: 6.93)</h3>
+<table>
+<tr><th>裁判模型</th><th>文筆</th><th>年代</th><th>角色</th><th>幽默</th><th>對話</th><th>節奏</th><th>AI</th><th>開篇</th></tr>
+<tr>
+            <td>mimo-v2.5-pro</td>
+            <td>9</td>
+            <td>9</td>
+            <td>8</td>
+            <td>6</td>
+            <td>8</td>
+            <td>8</td>
+            <td>9</td>
+            <td>8</td>
+            </tr><tr>
+            <td>mimo-v2-omni</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            </tr><tr>
+            <td>deepseek-v4-flash</td>
+            <td>8</td>
+            <td>9</td>
+            <td>7</td>
+            <td>6</td>
+            <td>7</td>
+            <td>8</td>
+            <td>7</td>
+            <td>8</td>
+            </tr><tr>
+            <td>gemini-3.5-flash-med</td>
+            <td>7</td>
+            <td>5</td>
+            <td>6</td>
+            <td>5</td>
+            <td>6</td>
+            <td>5</td>
+            <td>4</td>
+            <td>5</td>
+            </tr></table>
+<h3>gtposs-120b (總分: 6.82)</h3>
+<table>
+<tr><th>裁判模型</th><th>文筆</th><th>年代</th><th>角色</th><th>幽默</th><th>對話</th><th>節奏</th><th>AI</th><th>開篇</th></tr>
+<tr>
+            <td>mimo-v2.5-pro</td>
+            <td>7</td>
+            <td>8</td>
+            <td>6</td>
+            <td>5</td>
+            <td>7</td>
+            <td>7</td>
+            <td>8</td>
+            <td>8</td>
+            </tr><tr>
+            <td>mimo-v2-omni</td>
+            <td>8</td>
+            <td>9</td>
+            <td>7</td>
+            <td>6</td>
+            <td>8</td>
+            <td>8</td>
+            <td>9</td>
+            <td>8</td>
+            </tr><tr>
+            <td>deepseek-v4-flash</td>
+            <td>8</td>
+            <td>9</td>
+            <td>6</td>
+            <td>7</td>
+            <td>7</td>
+            <td>8</td>
+            <td>8</td>
+            <td>8</td>
+            </tr><tr>
+            <td>gemini-3.5-flash-med</td>
+            <td>7</td>
+            <td>8</td>
+            <td>7</td>
+            <td>6</td>
+            <td>7</td>
+            <td>6</td>
+            <td>7</td>
+            <td>6</td>
+            </tr></table>
+<h3>qwen3.5-plus (總分: 6.75)</h3>
+<table>
+<tr><th>裁判模型</th><th>文筆</th><th>年代</th><th>角色</th><th>幽默</th><th>對話</th><th>節奏</th><th>AI</th><th>開篇</th></tr>
+<tr>
+            <td>mimo-v2.5-pro</td>
+            <td>9</td>
+            <td>8</td>
+            <td>7</td>
+            <td>6</td>
+            <td>-</td>
+            <td>8</td>
+            <td>9</td>
+            <td>-</td>
+            </tr><tr>
+            <td>mimo-v2-omni</td>
+            <td>9</td>
+            <td>9</td>
+            <td>7</td>
+            <td>6</td>
+            <td>8</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            </tr><tr>
+            <td>deepseek-v4-flash</td>
+            <td>8</td>
+            <td>10</td>
+            <td>7</td>
+            <td>5</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            <td>9</td>
+            </tr><tr>
+            <td>gemini-3.5-flash-med</td>
+            <td>7</td>
+            <td>4</td>
+            <td>6</td>
+            <td>3</td>
+            <td>6</td>
+            <td>5</td>
+            <td>4</td>
+            <td>5</td>
+            </tr></table>
+<h3>mimo-v2-omni (總分: 6.46)</h3>
+<table>
+<tr><th>裁判模型</th><th>文筆</th><th>年代</th><th>角色</th><th>幽默</th><th>對話</th><th>節奏</th><th>AI</th><th>開篇</th></tr>
+<tr>
+            <td>mimo-v2.5-pro</td>
+            <td>9</td>
+            <td>9</td>
+            <td>8</td>
+            <td>7</td>
+            <td>8</td>
+            <td>9</td>
+            <td>8</td>
+            <td>9</td>
+            </tr><tr>
+            <td>mimo-v2-omni</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            </tr><tr>
+            <td>deepseek-v4-flash</td>
+            <td>9</td>
+            <td>10</td>
+            <td>8</td>
+            <td>5</td>
+            <td>8</td>
+            <td>9</td>
+            <td>9</td>
+            <td>10</td>
+            </tr><tr>
+            <td>gemini-3.5-flash-med</td>
+            <td>7</td>
+            <td>5</td>
+            <td>6</td>
+            <td>5</td>
+            <td>6</td>
+            <td>5</td>
+            <td>5</td>
+            <td>5</td>
+            </tr></table>
+
+<p class="note">報告結束。20 個模型 × 每篇完整 8 維度評分（四裁判平均 · 自我迴避）+ 差異標記。共產出 20 篇正文 + 80 份評分文件 + 1 份對照表（本文件）。</p>
+
+</div>
+</body>
+</html>

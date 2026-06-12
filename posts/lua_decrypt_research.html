@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unity 行動遊戲 Lua 資產加密逆向研究報告</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0d1117;color:#e6edf3;font-family:'Segoe UI',system-ui,sans-serif;line-height:1.7;padding:2rem 1rem}
+.wrap{max-width:1000px;margin:0 auto;display:flex;flex-direction:column;gap:2rem}
+header{background:linear-gradient(135deg,#161b22,#0d1117);border:1px solid #30363d;border-top:4px solid #58a6ff;border-radius:12px;padding:2.5rem}
+header h1{font-size:1.8rem;font-weight:700;color:#fff;margin-bottom:.75rem}
+.meta{display:flex;gap:1rem;flex-wrap:wrap;font-size:.85rem;color:#8b949e}
+.badge{background:rgba(88,166,255,.1);color:#58a6ff;border:1px solid rgba(88,166,255,.2);padding:.2rem .6rem;border-radius:99px;font-size:.8rem}
+section{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:2rem;display:flex;flex-direction:column;gap:1.25rem}
+section:hover{border-color:rgba(88,166,255,.3)}
+h2{font-size:1.35rem;font-weight:600;color:#fff;padding-bottom:.6rem;border-bottom:1px solid #30363d;display:flex;align-items:center;gap:.6rem}
+h2::before{content:'';display:inline-block;width:5px;height:1.1rem;background:linear-gradient(#58a6ff,#1f6feb);border-radius:3px}
+h3{font-size:1.1rem;font-weight:600;color:#79c0ff;margin-top:.5rem}
+h4{font-size:1rem;font-weight:600;color:#e6edf3}
+p,li{font-size:.95rem;color:#c9d1d9}
+ul,ol{padding-left:1.5rem;display:flex;flex-direction:column;gap:.4rem}
+code{font-family:'Cascadia Code','JetBrains Mono',monospace;font-size:.85rem;background:#0d1117;color:#f0883e;padding:.1rem .35rem;border-radius:4px;border:1px solid #30363d}
+pre{background:#0d1117;border:1px solid #30363d;border-radius:8px;padding:1.25rem;overflow-x:auto;font-family:'Cascadia Code','JetBrains Mono',monospace;font-size:.85rem;color:#c9d1d9;line-height:1.6}
+.tbl{overflow-x:auto;border-radius:8px;border:1px solid #30363d}
+table{width:100%;border-collapse:collapse}
+th{background:#1c2128;color:#fff;font-weight:600;padding:.75rem 1rem;text-align:left;font-size:.9rem;border-bottom:1px solid #30363d}
+td{padding:.75rem 1rem;font-size:.9rem;color:#c9d1d9;border-bottom:1px solid #21262d;background:rgba(22,27,34,.6)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(88,166,255,.03)}
+.callout{background:rgba(22,27,34,.5);border-left:4px solid #58a6ff;border-radius:0 8px 8px 0;padding:1rem 1.25rem;font-size:.95rem}
+.callout.warn{border-left-color:#f0883e}
+.callout.success{border-left-color:#3fb950}
+.flow{display:flex;flex-direction:column;gap:.75rem;padding:1.25rem;background:rgba(13,17,23,.5);border:1px solid #30363d;border-radius:8px}
+.flow-node{background:#1c2128;border:1px solid #30363d;border-radius:8px;padding:1rem}
+.flow-title{font-weight:600;color:#fff;margin-bottom:.4rem;display:flex;align-items:center;gap:.5rem;font-size:.95rem}
+.flow-arrow{text-align:center;color:#30363d;font-size:1.2rem;line-height:1}
+.flow-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.75rem;margin-top:.75rem}
+.flow-card{background:rgba(13,17,23,.5);border:1px solid #30363d;border-radius:6px;padding:.85rem;transition:border-color .2s}
+.flow-card:hover{border-color:#58a6ff}
+.fc-label{font-size:.75rem;font-weight:600;color:#58a6ff;text-transform:uppercase;margin-bottom:.3rem;letter-spacing:.05em}
+.fc-text{font-size:.85rem;color:#c9d1d9;line-height:1.5}
+.bx{display:inline-flex;align-items:center;justify-content:center;padding:.15rem .45rem;border-radius:5px;font-size:.75rem;font-weight:600;border:1px solid transparent}
+.bx-blue{background:rgba(88,166,255,.15);color:#79c0ff;border-color:rgba(88,166,255,.25)}
+.bx-green{background:rgba(63,185,80,.15);color:#56d364;border-color:rgba(63,185,80,.25)}
+.bx-warn{background:rgba(240,136,62,.15);color:#ffa657;border-color:rgba(240,136,62,.25)}
+.bx-red{background:rgba(248,81,73,.15);color:#ff7b72;border-color:rgba(248,81,73,.25)}
+footer{text-align:center;color:#484f58;font-size:.8rem;padding:1rem 0;border-top:1px solid #21262d}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Unity 行動遊戲 Lua 資產加密逆向研究報告</h1>
+  <div class="meta">
+    <span>性質：技術研究與逆向工程分析</span>
+    <span class="badge">Unity + xLua 架構</span>
+    <span class="badge">版本覆蓋：V1.38 → V3.90</span>
+    <span>最後更新：2026-05-28</span>
+  </div>
+</header>
+
+<section>
+  <h2>一、前言與研究背景</h2>
+  <p>本報告記錄了一套針對基於 <strong>Unity + xLua</strong> 框架的行動遊戲客戶端進行 Lua 原始碼完整還原的逆向工程研究過程。目標應用程式以 <strong>Unity AssetBundle (UnityFS)</strong> 格式封裝遊戲邏輯，並在 Lua 資產層面疊加了 <strong>自訂 XOR 全域加密</strong> 與 <strong>非標準 xLua 字節碼標頭</strong> 的雙重保護。</p>
+  <p>本研究透過系統性靜態逆向分析，完整還原了可人類閱讀的 Lua 原始碼，歷經多個迭代版本（V1 至 V10），最終達成跨所有版本的 <strong>100% 還原成功率</strong>。</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>版本</th><th>Lua 模組數</th><th>還原成功率</th><th>關鍵技術突破</th></tr></thead>
+      <tbody>
+        <tr><td>V1.38.1</td><td>1,166</td><td><span class="bx bx-green">100%</span></td><td>確立 XOR 金鑰與拆包結構；適配 xLua 標頭</td></tr>
+        <tr><td>V3.86.0</td><td>2,145</td><td><span class="bx bx-green">100%</span></td><td>處理大規模活動模組；建立假邊界過濾算法</td></tr>
+        <tr><td>V3.89.0</td><td>多模組</td><td><span class="bx bx-green">100%</span></td><td>適配多 Bundle 架構；建立全自動化管線</td></tr>
+        <tr><td>V3.90.0</td><td>多模組</td><td><span class="bx bx-green">100%</span></td><td>處理二進位雜訊；最佳化流程穩定性</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2>二、資產封裝結構分析</h2>
+  <h3>2.1 Unity AssetBundle 封裝層</h3>
+  <p>遊戲 Lua 資產以 <strong>Unity AssetBundle (格式：UnityFS v8, Unity 2022.3.x)</strong> 封裝分發。自 V3.89.0 起，資產由單一封裝檔拆分為多個業務模組 bundle：</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>Bundle 名稱</th><th>用途</th><th>體積（約）</th></tr></thead>
+      <tbody>
+        <tr><td><code>lua_core.bytes.bundle</code></td><td>核心業務邏輯、棋盤演算、UI 控制器</td><td>~8 MB</td></tr>
+        <tr><td><code>lua_config.bytes.bundle</code></td><td>靜態數值表（物品屬性、平衡參數）</td><td>~7 MB</td></tr>
+        <tr><td><code>lua_activity.bytes.bundle</code></td><td>獨立商業化活動模組邏輯</td><td>~3 MB</td></tr>
+        <tr><td><code>lua_base.bytes.bundle</code></td><td>基礎框架與工具函式庫</td><td>~2 MB</td></tr>
+        <tr><td><code>lua_test.bytes.bundle</code></td><td>測試與開發工具腳本</td><td>&lt;1 MB</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>每個 bundle 內含一個 <strong>TextAsset</strong> 類型物件（<code>m_Name = "Lua"</code>），其 <code>m_Script</code> 欄位儲存了已加密的原始位元組資料。</p>
+
+  <h3>2.2 三層保護架構</h3>
+  <div class="flow">
+    <div class="flow-node">
+      <div class="flow-title"><span class="bx bx-warn">Layer 0</span> APK 內 .bundle 檔案</div>
+      <p style="font-size:.85rem;color:#8b949e">Unity AssetBundle 格式，含 LZ4/LZMA 壓縮。由 UnityPy 庫解封。</p>
+    </div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-node">
+      <div class="flow-title"><span class="bx bx-warn">Layer 1</span> TextAsset.m_Script — 長字串金鑰 XOR 全域加密</div>
+      <p style="font-size:.85rem;color:#8b949e">對整個 Blob 進行循環 XOR。金鑰為 65 字元固定長字串，硬編碼於客戶端。</p>
+    </div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-node">
+      <div class="flow-title"><span class="bx bx-warn">Layer 2</span> 自訂 Archive 打包格式</div>
+      <p style="font-size:.85rem;color:#8b949e">XOR 解密後為一個自訂打包結構（int32 計數 + 多個 [短字串檔名 + int32 長度 + bytes 資料] 記錄）。</p>
+    </div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-node">
+      <div class="flow-title"><span class="bx bx-warn">Layer 3</span> xLua 非標準字節碼標頭</div>
+      <p style="font-size:.85rem;color:#8b949e">Format byte (offset 5) = 0x01、Instruction Size (offset 14) = 0x08，需 patch 後才能被標準 unluac 識別。</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>三、XOR 加密原理與逆向方法</h2>
+  <h3>3.1 XOR 加密數學原理</h3>
+  <p>XOR（互斥或）是一種對稱性串流加密方法，其核心特性：加密與解密使用<strong>完全相同的運算</strong>。</p>
+  <pre>加密：ciphertext[i] = plaintext[i]  XOR  key[i % key_length]
+解密：plaintext[i]  = ciphertext[i] XOR  key[i % key_length]
+
+數學依據：A XOR B XOR B = A（自反性）</pre>
+
+  <h3>3.2 金鑰發現過程</h3>
+  <div class="callout warn">
+    <strong>發現方法</strong>：透過對 APK 進行靜態反編譯（jadx / apktool + IL2CPP 分析），在 Native 層符號或 C# 反編譯產物中搜尋硬編碼字串常量。金鑰為明文存於可執行檔中，屬於混淆而非真正加密。
+  </div>
+  <p>目標應用程式的 XOR 金鑰為一段固定的 65 字元長字串：</p>
+  <pre>*(Vd7@4&amp;(*)VK~5hjLH-+~N7J!83jkl)*6(&amp;#65gdsw43t515fg(*^)#kJLHG</pre>
+
+  <h3>3.3 Python 核心解密實作</h3>
+  <pre>def xor_decrypt(data: bytes, key: str) -&gt; bytearray:
+    key_bytes = key.encode('utf-8')
+    key_len = len(key_bytes)
+    result = bytearray(len(data))
+    for i in range(len(data)):
+        result[i] = data[i] ^ key_bytes[i % key_len]  # 循環金鑰 XOR
+    return result</pre>
+
+  <h3>3.4 Archive 拆包結構（C# BinaryReader 移植）</h3>
+  <p>XOR 解密後，得到的明文資料遵循以下自訂打包格式（Little-Endian）：</p>
+  <pre>[4 bytes] int32  → Lua 模組總數 N
+重複 N 次：
+  [2 bytes] int16  → 檔名長度
+  [L bytes] string → 模組路徑（UTF-8，含"/"路徑分隔符）
+  [4 bytes] int32  → 字節碼長度 M
+  [M bytes] bytes  → xLua 5.3 字節碼資料</pre>
+  <p>此格式直接對應遊戲客戶端的 C# <code>BinaryReader</code> 讀取邏輯，每個模組完整路徑（如 <code>Model/Network/BI/BIManager</code>）被還原為資料夾層級，便於閱讀導航。</p>
+</section>
+
+<section>
+  <h2>四、xLua 字節碼標頭逆向</h2>
+  <h3>4.1 標準 Lua 5.3 vs xLua 差異對照</h3>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>位置（Offset）</th><th>欄位名稱</th><th>標準 Lua 5.3</th><th>xLua 遊戲版本</th></tr></thead>
+      <tbody>
+        <tr><td>Byte 0–3</td><td>Magic Number</td><td><code>\x1bLua</code></td><td><code>\x1bLua</code>（相同）</td></tr>
+        <tr><td>Byte 4</td><td>Version</td><td><code>0x53</code></td><td><code>0x53</code>（相同）</td></tr>
+        <tr><td><strong>Byte 5</strong></td><td><strong>Format</strong></td><td><strong><code>0x00</code></strong></td><td><strong><code>0x01</code> ← 需修正</strong></td></tr>
+        <tr><td>Byte 6–11</td><td>LUAC_TAIL</td><td>固定 6 bytes</td><td>相同</td></tr>
+        <tr><td><strong>Byte 14</strong></td><td><strong>Instruction Size</strong></td><td><strong><code>0x04</code></strong></td><td><strong><code>0x08</code> ← 需修正</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>4.2 標頭修正實作</h3>
+  <pre>def patch_lua_header(data: bytearray) -&gt; bool:
+    # 驗證是否為 Lua 5.3 字節碼
+    if data[0:4] == b'\x1bLua' and data[4] == 0x53:
+        data[5]  = 0x00  # Format:           0x01 → 0x00
+        data[14] = 0x04  # Instruction Size: 0x08 → 0x04
+        return True
+    return False  # 非 Lua 字節碼，跳過</pre>
+
+  <h3>4.3 假邊界問題：研究歷程關鍵突破（V10）</h3>
+  <div class="callout">
+    <strong>問題根源</strong>：早期版本（V1–V9）透過掃描 Lua 魔術數字（<code>\x1bLua</code>）定位各個 chunk 邊界，但 Lua 字節碼內部的<strong>字串常數</strong>也可能含有相同的位元組序列（如 <code>AdvertisementWindow.lua</code> 內嵌了另一段序列化 Lua 閉包），導致約 3,400 個假 chunk 與多個檔案被截斷損壞。
+  </div>
+  <div class="callout success" style="margin-top:.75rem">
+    <strong>V10 突破</strong>：完全捨棄邊界掃描法，改為直接依據 Archive 打包結構中的<strong>長度欄位</strong>精確讀取每個 chunk。此方法完全免疫假邊界干擾，實現 100% 提取成功率，且速度大幅提升。
+  </div>
+</section>
+
+<section>
+  <h2>五、完整還原管線</h2>
+  <div class="flow">
+    <div class="flow-node">
+      <div class="flow-title"><span class="bx bx-blue">Stage 1</span> Unity Bundle 解封</div>
+      <p style="font-size:.85rem;color:#c9d1d9">工具：<code>extract_via_unitypy.py</code> + UnityPy 庫<br>
+      操作：遍歷所有 <code>.bundle</code>，提取 TextAsset 類型物件的 <code>m_Script</code> 欄位<br>
+      輸出：<code>Extracted_Bytes_[版本]/</code> 目錄下的原始 <code>.bytes</code> 加密封裝檔</p>
+    </div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-node">
+      <div class="flow-title"><span class="bx bx-blue">Stage 2</span> XOR 解密與拆包</div>
+      <p style="font-size:.85rem;color:#c9d1d9">工具：<code>Csharp_Unpack_Port.py</code><br>
+      操作：XOR 解密整個 Blob → 按 Archive 格式按長度逐一解包<br>
+      輸出：<code>[名稱].bytes_lua_output/</code> 目錄（保留原始路徑結構的 <code>.lua</code> 二進位字節碼）</p>
+    </div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-node">
+      <div class="flow-title"><span class="bx bx-blue">Stage 3</span> 標頭修正與反編譯</div>
+      <p style="font-size:.85rem;color:#c9d1d9">工具：<code>batch_decompile.py</code> + <code>unluac.jar</code><br>
+      操作：自動執行 2-byte 標頭 patch → 呼叫 <code>java -jar unluac.jar</code> 反編譯<br>
+      輸出：<code>Decompiled_Lua_[名稱]/</code> — 完整明文 Lua 原始碼，含層級資料夾結構</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>六、使用手冊</h2>
+  <h3>6.1 環境需求</h3>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>組件</th><th>版本</th><th>安裝方式</th></tr></thead>
+      <tbody>
+        <tr><td>Python</td><td>3.8+</td><td>python.org 官方安裝</td></tr>
+        <tr><td>Java Runtime (JRE)</td><td>8+</td><td>官方安裝（unluac.jar 運行所需）</td></tr>
+        <tr><td>UnityPy</td><td>1.25.0+</td><td><code>pip install UnityPy lz4</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>6.2 方案 A：全自動一鍵處理（推薦，V3.89.0+）</h3>
+  <p>將所有 <code>.bundle</code> 檔案放入版本資料夾（如 <code>3.90.0/</code>），執行：</p>
+  <pre>python extract_via_unitypy.py 3.90.0</pre>
+  <p>腳本自動完成三個階段。最終輸出位於 <code>Decompiled_Lua_*.bytes_lua_output/</code> 目錄。</p>
+
+  <h3>6.3 方案 B：分步處理（適用舊版單一 bytes 檔）</h3>
+  <pre># 步驟 1 — 解密與拆包
+python Csharp_Unpack_Port.py Lua.bytes
+# 輸出至：Lua.bytes_lua_output/
+
+# 步驟 2 — 批量反編譯
+python batch_decompile.py Lua.bytes_lua_output
+# 輸出至：Decompiled_Lua.bytes_lua_output/</pre>
+
+  <h3>6.4 工具檔案說明</h3>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>檔案</th><th>角色</th><th>說明</th></tr></thead>
+      <tbody>
+        <tr><td><code>extract_via_unitypy.py</code></td><td><span class="bx bx-blue">入口</span></td><td>串接三個階段的自動化管線主控器</td></tr>
+        <tr><td><code>Csharp_Unpack_Port.py</code></td><td><span class="bx bx-warn">解密核心</span></td><td>XOR 解密 + Archive 格式按長度精確拆包</td></tr>
+        <tr><td><code>batch_decompile.py</code></td><td><span class="bx bx-warn">反編譯核心</span></td><td>xLua 標頭修正 + 批量呼叫 unluac.jar</td></tr>
+        <tr><td><code>unluac.jar</code></td><td><span class="bx bx-green">引擎</span></td><td>Lua 5.3 字節碼 → 可讀原始碼（Java）</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>6.5 常見問題排查</h3>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>現象</th><th>原因</th><th>解決方式</th></tr></thead>
+      <tbody>
+        <tr><td>解包後全為亂碼</td><td>XOR 金鑰不符當前版本</td><td>重新逆向客戶端更新金鑰</td></tr>
+        <tr><td>unluac 反編譯失敗</td><td>標頭 patch 未正確執行</td><td>確認 byte5=0x00、byte14=0x04</td></tr>
+        <tr><td>提取 TextAsset 為空</td><td>Bundle 格式或 UnityPy 版本不符</td><td>升級 UnityPy：<code>pip install -U UnityPy</code></td></tr>
+        <tr><td>部分 .lua 被跳過</td><td>非標準 Lua 5.3 簽名（二進位資產）</td><td>正常行為，非 Lua 檔自動略過</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2>七、研究結論與安全評估</h2>
+  <p>本研究成功對目標應用程式的三重 Lua 資產保護機制進行了完整逆向，最終工具鏈達成所有版本 100% 的原始碼回收率。</p>
+  <div class="callout warn">
+    <strong>核心安全評估</strong>：該保護機制本質上是<strong>混淆（Obfuscation）而非真正加密</strong>。XOR 金鑰硬編碼於可執行檔中，具備基本逆向門檻（需了解 Bundle 結構），但對具備靜態分析能力的研究人員而言，還原過程可完全自動化且達到 100% 覆蓋率。建議後續版本採用動態密鑰生成或服務端下發機制以提高保護強度。
+  </div>
+</section>
+
+<footer>Unity 行動遊戲 Lua 資產加密逆向研究報告 — 純技術研究文件，已隱去目標應用程式具體名稱</footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>載入中... | Kain's AI Space</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome 圖標 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Prism.js 程式碼高亮 Tomorrow Night 科技感主題 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  
+  <!-- 核心 CSS -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="tech-theme post-page">
+  <!-- 頂部閱讀進度條 -->
+  <div class="reading-progress-container">
+    <div class="reading-progress-bar" id="progress-bar"></div>
+  </div>
+
+  <!-- 背景科技光暈效果 -->
+  <div class="glow-bg">
+    <div class="glow-circle circle-1"></div>
+    <div class="glow-circle circle-2"></div>
+  </div>
+
+  <!-- 頂部導覽列 -->
+  <header class="navbar" id="site-header">
+    <div class="container nav-container">
+      <a href="index.html" class="nav-logo" id="nav-home-link">
+        <span class="logo-icon"><i class="fa-solid fa-brain"></i></span>
+        <span class="logo-text">Kain's <span class="accent-text">AI Space</span></span>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link"><i class="fa-solid fa-house"></i> 首頁</a>
+        <a href="https://github.com" target="_blank" class="nav-link"><i class="fa-brands fa-github"></i> GitHub</a>
+        <a href="https://app.netlify.com/teams/kainjalos/projects" target="_blank" class="nav-link"><i class="fa-solid fa-cloud-arrow-up"></i> Netlify</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- 主要內容區 -->
+  <main class="main-content">
+    <div class="container post-container">
+      <!-- 麵包屑導覽與返回按鈕 -->
+      <nav class="breadcrumb">
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> 返回首頁</a>
+      </nav>
+
+      <!-- 文章主體卡片 -->
+      <article class="post-card" id="post-content-wrapper">
+        <!-- 載入中動畫 -->
+        <div class="loading-spinner" id="post-loader">
+          <div class="spinner"></div>
+          <p>正在解密並編譯 Markdown 檔案...</p>
+        </div>
+        
+        <!-- 文章標題與 Meta 區 (由 JS 動態填入) -->
+        <header class="post-header" style="display: none;" id="post-header-area">
+          <div class="post-meta">
+            <span class="post-date" id="post-detail-date"><i class="fa-solid fa-calendar-days"></i> 2026-05-28</span>
+            <span class="post-views" id="post-detail-views"><i class="fa-solid fa-eye"></i> <span id="post-views-count">--</span> 次閱讀</span>
+            <span class="post-tags" id="post-detail-tags">
+              <!-- 動態生成 -->
+            </span>
+          </div>
+          <h1 class="post-detail-title" id="post-detail-title">文章標題</h1>
+        </header>
+
+        <!-- Markdown 渲染主體 (由 JS 動態填入) -->
+        <div class="post-body markdown-body" style="display: none;" id="post-body-area">
+        </div>
+      </article>
+
+      <!-- 找不到文章 (404) 區塊 -->
+      <div class="error-container widget" id="error-area" style="display: none;">
+        <div class="error-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <h2>文章不存在</h2>
+        <p>抱歉，我們找不到您要求的筆記檔案。可能該文章已被移動、刪除或網址輸入錯誤。</p>
+        <a href="index.html" class="btn btn-primary"><i class="fa-solid fa-house"></i> 回到首頁</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- 頁尾 -->
+  <footer class="site-footer">
+    <div class="container footer-container">
+      <p class="copyright">&copy; 2026 Kain's AI Space. Powered by Netlify.</p>
+      <div class="footer-meta">
+        <span>Made with <i class="fa-solid fa-heart accent-text"></i> and KISS Principle</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 第三方函式庫：Marked 解析器 & Prism.js 程式碼高亮 -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- 引入核心 JavaScript -->
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

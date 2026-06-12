@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>沖繩經典四日遊</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Zen+Maru+Gothic:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <canvas class="ink-canvas" id="inkCanvas"></canvas>
+
+  <nav class="nav" id="nav">
+    <div class="nav-brand">沖繩四日遊</div>
+    <ul class="nav-links">
+      <li><a href="#day1" data-day="1">Day 1</a></li>
+      <li><a href="#day2" data-day="2">Day 2</a></li>
+      <li><a href="#day3" data-day="3">Day 3</a></li>
+      <li><a href="#day4" data-day="4">Day 4</a></li>
+    </ul>
+  </nav>
+
+  <header class="hero" id="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-particles" id="particles"></div>
+    <div class="hero-content">
+      <p class="hero-sub">TAIPEI → OKINAWA</p>
+      <h1 class="hero-title">
+        <span class="hero-title-line">沖繩</span>
+        <span class="hero-title-line accent">經典四日遊</span>
+      </h1>
+      <p class="hero-desc">碧海 · 白沙 · 琉球風情</p>
+      <a href="#day1" class="hero-cta">
+        <span>開始旅程</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+      </a>
+    </div>
+    <div class="hero-wave">
+      <svg viewBox="0 0 1440 200" preserveAspectRatio="none">
+        <path d="M0,80 C360,160 720,0 1080,80 C1260,120 1380,100 1440,80 L1440,200 L0,200 Z" fill="var(--bg)"/>
+      </svg>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <section class="day-section" id="day1" data-day="1">
+      <div class="day-header">
+        <span class="day-number">01</span>
+        <div class="day-info">
+          <h2 class="day-title">啟程</h2>
+          <p class="day-subtitle">台北 ➔ 沖繩（那霸空港） ➔ 飯店</p>
+        </div>
+      </div>
+      <div class="day-content">
+        <div class="timeline">
+          <div class="timeline-item reveal">
+            <div class="timeline-marker"></div>
+            <div class="card card-has-bg" data-bg="https://images.unsplash.com/photo-1436491865332-7a61a109db05?w=800&q=80">
+              <div class="card-icon">✈️</div>
+              <h3 class="card-title">搭乘豪華客機出發</h3>
+              <p class="card-text">帶著期待的心情由台北出發，飛往有「日本夏威夷」之稱的沖繩。從機窗望去，蔚藍的東海逐漸轉變為通透的琉球碧色，旅程的興奮感油然而生。</p>
+            </div>
+          </div>
+          <div class="timeline-item reveal">
+            <div class="timeline-marker"></div>
+            <div class="card card-has-bg" data-bg="https://images.unsplash.com/photo-1529074963764-98f45c47344b?w=800&q=80">
+              <div class="card-icon">🛬</div>
+              <h3 class="card-title">抵達那霸空港</h3>
+              <p class="card-text">降落那霸空港，專業導遊接機後搭乘專車前往飯店。沖繩的空氣帶著溫暖的海風氣息，從踏出機場的那一刻就能感受到亞熱帶島嶼的獨特氛圍。</p>
+            </div>
+          </div>
+          <div class="timeline-item reveal">
+            <div class="timeline-marker"></div>
+            <div class="card card-has-bg" data-bg="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80">
+              <div class="card-icon">🏨</div>
+              <h3 class="card-title">飯店 Check-in</h3>
+              <p class="card-text">抵達飯店辦理入住手續，好好休息為接下來的精彩行程養精蓄銳。今晚就让沖繩的寧靜夜晚伴您入眠。</p>
+            </div>
+          </div>
+        </div>
+        <div class="meal-info reveal">
+          <h4>今日餐食</h4>
+          <div class="meal-tags">
+            <span class="meal-tag">早餐：敬請自理</span>
+            <span class="meal-tag">午餐：敬請自理</span>
+            <span class="meal-tag">晚餐：機上輕食或自理</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="day-section" id="day2" data-day="2">
+      <div class="day-header">
+        <span class="day-number">02</span>
+        <div class="day-info">
+          <h2 class="day-title">海洋與美式風情</h2>
+          <p class="day-subtitle">萬座毛 · 美之海水族館 · 美國村</p>
+        </div>
+      </div>
+      <div class="day-content">
+        <div class="timeline">
+          <div class="timeline-item reveal">
+            <div class="timeline-marker"></div>
+            <div class="card card-featured card-has-bg" data-bg="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80">
+              <div class="card-badge">必訪景點</div>
+              <div class="card-icon">🐘</div>
+              <h3 class="card-title">萬座毛</h3>
+              <p class="card-text">沖繩最具代表性的自然景觀。象鼻形狀的海蝕懸崖矗立在海岸線上，崖頂覆蓋著翠綠的草坪。站在觀景台遠眺，遼闊湛藍的太平洋一覽無遺，海浪拍打崖底的聲音如同大自然的交響樂。</p>
+              <div class="card-meta">
+                <span>📍 恩納村</span>
+                <span>⏱ 約30分鐘</span>
+              </div>
+            </div>
+          </div>
+          <div class="timeline-item reveal">
+            <div class="timeline-marker"></div>
+            <div class="card card-featured card-has-bg" data-bg="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80">
+              <div class="card-badge">全沖繩最熱門</div>
+              <div class="card-icon">🐋</div>
+              <h3 class="card-title">海洋博公園 · 美之海水族館</h3>
+              <p class="card-text">擁有世界第一大的巨大水槽「黑潮之海」，高達 8.2 公尺、寬 22.5 公尺的壓克力面板後，是令人屏息的海洋世界。巨大的鯨鯊優雅地滑過水中，鬼蝠魟如水中蝙蝠般展翅悠游，讓人彷彿置身深海之中。</p>
+              <p class="card-text">此外，園區內還有精彩逗趣的海豚表演秀，海豚們躍出水面的英姿總是引來滿堂喝采。戶外園區可漫步沙灘、欣賞翡翠綠的海水，是適合全家大小流連一整天的夢幻景點。</p>
+              <div class="card-meta">
+                <span>📍 本部町</span>
+                <span>⏱ 約3-4小時</span>
+              </div>
+            </div>
+          </div>
+          <div class="timeline-item reveal">
+            <div class="timeline-marker"></div>
+            <div class="card card-featured card-has-bg" data-bg="https://images.unsplash.com/photo-1534430480872-3498386e7856?w=800&q=80">
+              <div class="card-icon">🎡</div>
+              <h3 class="card-title">美國村 (American Village)</h3>
+              <p class="card-text">充滿濃厚美式異國風情的娛樂購物區。色彩繽紛的建築外牆、巨型摩天輪、美式雜貨店與海景餐廳交織出獨特的度假氛圍。夕陽時分，金色的光線灑在色彩斑斕的建築物上，是沖繩最上鏡的打卡地標之一。</p>
+              <p class="card-text">推薦在此享用晚餐，沿著海濱步道散步，感受海風與霓虹交織的浪漫夜晚。</p>
+              <div class="card-meta">
+                <span>📍 北谷町</span>
+                <span>⏱ 約2-3小時</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="meal-info reveal">
+          <h4>今日餐食</h4>
+          <div class="meal-tags">
+            <span class="meal-tag">早餐：飯店內享用</span>
+            <span class="meal-tag highlight">午餐：沖繩在地風味料理</span>
+            <span class="meal-tag">晚餐：美國村自理</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="day-section day-free" id="day3" data-day="3">
+      <div class="day-header">
+        <span class="day-number">03</span>
+        <div class="day-info">
+          <h2 class="day-title">自由活動日</h2>
+          <p class="day-subtitle">享受完全屬於自己的沖繩時光</p>
+        </div>
+      </div>
+      <div class="theme-switcher reveal">
+        <p class="theme-label">選擇今日主題</p>
+        <div class="theme-buttons">
+          <button class="theme-btn active" data-theme="aquarium">
+            <span class="theme-btn-icon">🐠</span>
+            <span class="theme-btn-text">DMM 水族館</span>
+          </button>
+          <button class="theme-btn" data-theme="senaga">
+            <span class="theme-btn-icon">✈️</span>
+            <span class="theme-btn-text">瀨長島</span>
+          </button>
+          <button class="theme-btn" data-theme="park">
+            <span class="theme-btn-icon">🎠</span>
+            <span class="theme-btn-text">奧武山公園</span>
+          </button>
+        </div>
+      </div>
+      <div class="day-content">
+        <div class="theme-panels">
+          <div class="theme-panel active" data-panel="aquarium">
+            <div class="timeline">
+              <div class="timeline-item reveal">
+                <div class="timeline-marker"></div>
+                <div class="card card-featured card-has-bg" data-bg="https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?w=800&q=80">
+                  <div class="card-badge">親子推薦</div>
+                  <div class="card-icon">🐠</div>
+                  <h3 class="card-title">DMM 水族館</h3>
+                  <p class="card-text">位於豐崎地區的全新水族館，以「與海洋生物近距離接觸」為概念設計。館內有觸摸池體驗區、水母夢幻展廳，以及可以近距離觀賞海豚的互動區域。相較於美之海水族館的壯闊，DMM 更強調精緻與互動性，非常適合親子同遊。</p>
+                  <div class="card-meta">
+                    <span>📍 豐見城市</span>
+                    <span>⏱ 約2小時</span>
+                  </div>
+                </div>
+              </div>
+              <div class="timeline-item reveal">
+                <div class="timeline-marker"></div>
+                <div class="card card-has-bg" data-bg="https://images.unsplash.com/photo-1519046904884-53103b34b206?w=800&q=80">
+                  <div class="card-icon">🏖️</div>
+                  <h3 class="card-title">豐崎美麗陽光海灘</h3>
+                  <p class="card-text">DMM 水族館旁即是白沙綿延的豐崎海灘，海水清澈見底，是沖繩本島最適合戲水的海灘之一。可以在這裡堆沙堡、踏浪，享受悠閒的海島午後。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="theme-panel" data-panel="senaga">
+            <div class="timeline">
+              <div class="timeline-item reveal">
+                <div class="timeline-marker"></div>
+                <div class="card card-featured card-has-bg" data-bg="https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=800&q=80">
+                  <div class="card-badge">網美聖地</div>
+                  <div class="card-icon">✈️</div>
+                  <h3 class="card-title">瀨長島 Umikaji Terrace</h3>
+                  <p class="card-text">距離那霸機場僅 1.5 公里的小島，白色階梯式建築面朝大海，宛如地中海度假勝地。最迷人的是在露天咖啡座一邊享用鬆餅，一邊近距離觀賞飛機起降的壯觀畫面。傍晚時分，夕陽將整片天空染成橘紅色，是沖繩最浪漫的日落景點之一。</p>
+                  <div class="card-meta">
+                    <span>📍 豐見城市</span>
+                    <span>⏱ 約2-3小時</span>
+                  </div>
+                </div>
+              </div>
+              <div class="timeline-item reveal">
+                <div class="timeline-marker"></div>
+                <div class="card card-has-bg" data-bg="https://images.unsplash.com/photo-1540541338287-41700207dee6?w=800&q=80">
+                  <div class="card-icon">♨️</div>
+                  <h3 class="card-title">瀨長島溫泉</h3>
+                  <p class="card-text">島上設有天然溫泉設施「琉球溫泉 瀨長島酒店」，可以邊泡溫泉邊欣賞無敵海景。在自由行的午後泡個湯，洗去旅途的疲憊，是極致的放鬆體驗。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="theme-panel" data-panel="park">
+            <div class="timeline">
+              <div class="timeline-item reveal">
+                <div class="timeline-marker"></div>
+                <div class="card card-featured card-has-bg" data-bg="https://images.unsplash.com/photo-1585938389612-a552a28d6914?w=800&q=80">
+                  <div class="card-badge">小朋友最愛</div>
+                  <div class="card-icon">🎠</div>
+                  <h3 class="card-title">奧武山公園</h3>
+                  <p class="card-text">那霸市區內的大型綜合公園，擁有沖繩最知名的超長溜滑梯（全長約 15 公尺），是小朋友放電的天堂。公園內還有大型攀爬設施、沙坑和盪鞦韆，可以讓孩子們盡情玩耍整個下午。周圍綠蔭環繞，是都市中難得的綠洲。</p>
+                  <div class="card-meta">
+                    <span>📍 那霸市</span>
+                    <span>⏱ 約2小時</span>
+                  </div>
+                </div>
+              </div>
+              <div class="timeline-item reveal">
+                <div class="timeline-marker"></div>
+                <div class="card card-has-bg" data-bg="https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=800&q=80">
+                  <div class="card-icon">🚝</div>
+                  <h3 class="card-title">單軌電車漫遊</h3>
+                  <p class="card-text">利用沖繩便利的單軌電車（Yui Rail）穿梭市區，沿線經過首里城、牧志公設市場等景點。買一張一日乘車券，隨心所欲地探索那霸的每個角落。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="meal-info reveal">
+          <h4>今日餐食</h4>
+          <div class="meal-tags">
+            <span class="meal-tag">早餐：飯店內享用</span>
+            <span class="meal-tag">午餐：自由活動自理</span>
+            <span class="meal-tag">晚餐：自由活動自理</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="day-section" id="day4" data-day="4">
+      <div class="day-header">
+        <span class="day-number">04</span>
+        <div class="day-info">
+          <h2 class="day-title">文化巡禮 · 歸途</h2>
+          <p class="day-subtitle">波上宮 · 免稅店 · 國際通 ➔ 台北</p>
+        </div>
+      </div>
+      <div class="day-content">
+        <div class="timeline">
+          <div class="timeline-item reveal">
+            <div class="timeline-marker"></div>
+            <div class="card card-featured card-has-bg" data-bg="https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=800&q=80">
+              <div class="card-icon">⛩️</div>
+              <h3 class="card-title">波上宮</h3>
+              <p class="card-text">建在珊瑚礁懸崖之上的神社，是琉球八社之首，自古以來便是沖繩最重要的信仰中心。朱紅色的社殿在藍天碧海的映襯下格外莊嚴。沿著石階而上，穿過鳥居，在社殿前合掌祈願，感受數百年琉球王國的 spiritual 氛圍。神社下方即是波之上海灘，是市區中非常獨特的「神社與海灘並存」的景觀。</p>
+              <div class="card-meta">
+                <span>📍 那霸市</span>
+                <span>⏱ 約45分鐘</span>
+              </div>
+            </div>
+          </div>
+          <div class="timeline-item reveal">
+            <div class="timeline-marker"></div>
+            <div class="card card-has-bg" data-bg="https://images.unsplash.com/photo-1555529669-e69e7aa0ba98?w=800&q=80">
+              <div class="card-icon">🛍️</div>
+              <h3 class="card-title">免稅店 / 藥妝店</h3>
+              <p class="card-text">前往沖繩市區的大型免稅商店，一次補齊必買的日本藥妝、沖繩限定土產伴手禮與紀念品。推薦購買紫薯塔、黑糖、泡盛酒等沖繩特產，以及雪肌精、龍角散等日本人氣商品。</p>
+            </div>
+          </div>
+          <div class="timeline-item reveal">
+            <div class="timeline-marker"></div>
+            <div class="card card-featured card-has-bg" data-bg="https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=800&q=80">
+              <div class="card-badge">那霸地標</div>
+              <div class="card-icon">🏮</div>
+              <h3 class="card-title">國際通 (Kokusai Dori)</h3>
+              <p class="card-text">全長約 1.6 公里的「奇蹟一英里」，是那霸市區最繁華的商業大街。街道兩旁開滿了沖繩特產店、居酒屋、伴手禮店與各式美食。推薦品嚐沖繩蕎麥麵、塔可飯、A&W 根汁啤酒等在地美食，在搭機前做最後的巡禮。</p>
+              <div class="card-meta">
+                <span>📍 那霸市</span>
+                <span>⏱ 約1.5-2小時</span>
+              </div>
+            </div>
+          </div>
+          <div class="timeline-item reveal">
+            <div class="timeline-marker"></div>
+            <div class="card card-has-bg" data-bg="https://images.unsplash.com/photo-1436491865332-7a61a109db05?w=800&q=80">
+              <div class="card-icon">🛫</div>
+              <h3 class="card-title">返回台北</h3>
+              <p class="card-text">帶著滿滿的收穫與回憶，由導遊帶領前往那霸空港，搭機返回台北。四天的沖繩之旅雖然短暫，但碧海藍天、琉球文化與家人的歡笑聲，將成為最珍貴的回憶。</p>
+            </div>
+          </div>
+        </div>
+        <div class="meal-info reveal">
+          <h4>今日餐食</h4>
+          <div class="meal-tags">
+            <span class="meal-tag">早餐：飯店內享用</span>
+            <span class="meal-tag">午餐：國際通自理</span>
+            <span class="meal-tag">晚餐：機上輕食或自理</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <p class="footer-text">沖繩經典四日遊 · 碧海白沙琉球風情</p>
+      <p class="footer-sub">台北 ✈ 那霸 · 一段關於海與陽光的旅程</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

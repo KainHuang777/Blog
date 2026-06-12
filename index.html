@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kain's AI Space | AI 學習歷程與筆記分享</title>
+  <meta name="description" content="記錄 Kain 的 AI 學習歷程、大型語言模型（LLMs）探索筆記、技術實踐與個人心得分享的數位空間。">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome 圖標 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- 核心 CSS -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="tech-theme">
+  <!-- 背景科技光暈效果 -->
+  <div class="glow-bg">
+    <div class="glow-circle circle-1"></div>
+    <div class="glow-circle circle-2"></div>
+  </div>
+
+  <!-- 頂部導覽列 -->
+  <header class="navbar" id="site-header">
+    <div class="container nav-container">
+      <a href="index.html" class="nav-logo" id="nav-home-link">
+        <span class="logo-icon"><i class="fa-solid fa-brain"></i></span>
+        <span class="logo-text">Kain's <span class="accent-text">AI Space</span></span>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link active"><i class="fa-solid fa-house"></i> 首頁</a>
+        <a href="https://github.com" target="_blank" class="nav-link"><i class="fa-brands fa-github"></i> GitHub</a>
+        <a href="https://app.netlify.com/teams/kainjalos/projects" target="_blank" class="nav-link"><i class="fa-solid fa-cloud-arrow-up"></i> Netlify</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- 主要內容區 -->
+  <main class="main-content">
+    <div class="container main-container">
+      
+      <!-- 左側：文章列表 -->
+      <section class="posts-section">
+        <!-- 嵌入式英雄區 (精緻左側 Layout) -->
+        <div class="hero-section-embedded">
+          <div class="badge"><i class="fa-solid fa-sparkles"></i> 探索 AI 的無限可能</div>
+          <h1 class="hero-title">記錄 <span class="gradient-text">AI 學習歷程</span><br>與技術分享空間</h1>
+          <p class="hero-subtitle">
+            在這裡，我記錄著在 LLM 時代下的成長軌跡、Agent 智能體開發心得以及個人在科技浪潮中的探索與筆記。
+          </p>
+          <div class="hero-stats">
+            <div class="stat-item">
+              <span class="stat-num" id="stat-post-count">4</span>
+              <span class="stat-label">技術文章</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-num">2026</span>
+              <span class="stat-label">啟航年份</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-num" id="stat-total-views">--</span>
+              <span class="stat-label">總訪問量</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-header">
+          <h2 class="section-title"><i class="fa-solid fa-receipt"></i> 近期筆記與分享</h2>
+          <div class="filter-bar" id="tag-filter-bar">
+            <!-- 標籤過濾器將由 JS 動態生成 -->
+            <button class="filter-btn active" data-tag="all">全部</button>
+          </div>
+        </div>
+
+        <!-- 文章網格容器 -->
+        <div class="posts-grid" id="posts-list-container">
+          <!-- 載入中動畫 -->
+          <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>正在加載 AI 智慧結晶...</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 右側：側邊欄 (Sidebar) -->
+      <aside class="sidebar">
+        <!-- 個人檔案卡片 -->
+        <div class="widget profile-widget">
+          <div class="profile-avatar">
+            <i class="fa-solid fa-user-astronaut"></i>
+          </div>
+          <h3 class="profile-name">Kain</h3>
+          <p class="profile-bio">AI 探索者 / 技術筆記愛好者。專注於 AI 工作流整合、大語言模型應用與智慧體開發。</p>
+          <div class="profile-social">
+            <a href="https://github.com" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
+            <a href="mailto:your-email@example.com" title="Email"><i class="fa-solid fa-envelope"></i></a>
+          </div>
+        </div>
+
+        <!-- 筆記分類小工具 -->
+        <div class="widget categories-widget">
+          <h3 class="widget-title"><i class="fa-solid fa-folder-open"></i> 筆記分類</h3>
+          <ul class="category-list" id="sidebar-categories-container">
+            <li class="category-loading"><i class="fa-solid fa-spinner fa-spin"></i> 正在整理分類...</li>
+          </ul>
+        </div>
+
+        <!-- 學習領域標籤雲 -->
+        <div class="widget tags-widget">
+          <h3 class="widget-title"><i class="fa-solid fa-tags"></i> 學習領域標籤</h3>
+          <div class="tag-cloud" id="sidebar-tags-container">
+            <!-- 由 JS 動態生成 -->
+          </div>
+        </div>
+
+        <!-- 快速導覽網站地圖小工具 -->
+        <div class="widget sitemap-widget">
+          <h3 class="widget-title"><i class="fa-solid fa-map-location-dot"></i> 快速導覽</h3>
+          <ul class="sitemap-list">
+            <li>
+              <a href="index.html" class="sitemap-link">
+                <i class="fa-solid fa-house"></i> 首頁
+              </a>
+            </li>
+            <li>
+              <a href="v3-report.html" target="_blank" class="sitemap-link accent-link">
+                <i class="fa-solid fa-chart-line"></i> LLM 寫作評測報告 V3.0
+              </a>
+            </li>
+            <li>
+              <a href="benchmark-summary-v1.html" target="_blank" class="sitemap-link accent-link-v1">
+                <i class="fa-solid fa-clock-rotate-left"></i> LLM 寫作評測報告 V1.0 (歷史)
+              </a>
+            </li>
+            <li>
+              <a href="https://github.com" target="_blank" class="sitemap-link">
+                <i class="fa-brands fa-github"></i> GitHub 開源倉庫
+              </a>
+            </li>
+            <li>
+              <a href="README.md" target="_blank" class="sitemap-link muted-link">
+                <i class="fa-solid fa-book"></i> 部落格寫作與管理手冊
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- 精選作品展示小工具 -->
+        <div class="widget project-widget">
+          <h3 class="widget-title"><i class="fa-solid fa-wand-magic-sparkles"></i> 精選作品 / Showcase</h3>
+          <ul class="project-list">
+            <li>
+              <a href="https://dao-sooty-nine.vercel.app/" target="_blank" class="project-link gold-link">
+                <span class="project-icon"><i class="fa-solid fa-yin-yang taichi-spin"></i></span>
+                <div class="project-info">
+                  <span class="project-name">修仙問道 (Xianxia Idle)</span>
+                  <span class="project-desc">多國語言網頁放置遊戲 (Antigravity 開發)</span>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- 頁尾 -->
+  <footer class="site-footer">
+    <div class="container footer-container">
+      <p class="copyright">&copy; 2026 Kain's AI Space. Powered by Netlify.</p>
+      <div class="footer-meta">
+        <span>Made with <i class="fa-solid fa-heart accent-text"></i> and KISS Principle</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- 引入核心 JavaScript -->
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

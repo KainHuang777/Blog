@@ -1,0 +1,12 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# Blog Archives (本地下架封存原稿，不推送到 GitHub 線上部署)
+posts_archive/

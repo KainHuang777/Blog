@@ -1,0 +1,21 @@
+[build]
+  publish = "."
+
+[[headers]]
+  for = "/*"
+    [headers.values]
+      X-Frame-Options = "DENY"
+      X-XSS-Protection = "1; mode=block"
+      X-Content-Type-Options = "nosniff"
+      Referrer-Policy = "no-referrer-when-downgrade"
+
+# 針對 posts 目錄下的 markdown 以及 posts.json 進行快取控制，確保內容能即時更新
+[[headers]]
+  for = "/posts.json"
+    [headers.values]
+      Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/posts/*"
+    [headers.values]
+      Cache-Control = "public, max-age=0, must-revalidate"
