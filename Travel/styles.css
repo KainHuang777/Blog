@@ -117,6 +117,539 @@ body {
   text-shadow: none;
 }
 
+.card-map-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.75rem;
+  padding: 0.3rem 0.75rem;
+  background: rgba(46, 134, 171, 0.08);
+  border: 1px solid rgba(46, 134, 171, 0.15);
+  border-radius: 50px;
+  color: var(--ocean-mid);
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.card-map-link:hover {
+  background: var(--ocean-mid);
+  border-color: var(--ocean-mid);
+  color: var(--white);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(26, 82, 118, 0.25);
+}
+
+.card-map-link svg {
+  flex-shrink: 0;
+}
+
+/* ===== TRAVEL INFO ===== */
+.travel-info {
+  position: relative;
+  margin: 0.5rem 0 0.5rem 2rem;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: linear-gradient(135deg, rgba(46, 134, 171, 0.06), rgba(0, 212, 170, 0.06));
+  border: 1px dashed rgba(46, 134, 171, 0.25);
+  border-radius: var(--radius-md);
+  transition: var(--transition);
+}
+
+.travel-info:hover {
+  background: linear-gradient(135deg, rgba(46, 134, 171, 0.1), rgba(0, 212, 170, 0.1));
+  border-color: rgba(46, 134, 171, 0.4);
+}
+
+.travel-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.travel-details {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.travel-mode {
+  font-weight: 600;
+  color: var(--ocean-mid);
+}
+
+.travel-time {
+  padding: 0.15rem 0.5rem;
+  background: var(--ocean-mid);
+  color: var(--white);
+  border-radius: 50px;
+  font-weight: 500;
+  font-size: 0.7rem;
+}
+
+.travel-route {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ===== MEAL MARKER ===== */
+.meal-marker {
+  position: relative;
+  margin: 0.5rem 0 0.5rem 2rem;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid rgba(255, 107, 107, 0.2);
+  background: linear-gradient(135deg, rgba(255, 107, 107, 0.05), rgba(255, 160, 122, 0.05));
+  transition: var(--transition);
+}
+
+.meal-marker:hover {
+  border-color: rgba(255, 107, 107, 0.35);
+}
+
+.meal-marker-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  cursor: default;
+}
+
+.meal-marker-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.meal-marker-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--coral);
+  flex: 1;
+}
+
+.meal-marker[data-meal="lunch"] .meal-marker-title {
+  color: var(--ocean-mid);
+}
+
+.meal-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: none;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: var(--transition);
+}
+
+.meal-toggle:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--text);
+}
+
+.meal-toggle.open svg {
+  transform: rotate(180deg);
+}
+
+.meal-toggle svg {
+  transition: transform 0.3s ease;
+}
+
+.meal-marker-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.4s ease;
+  padding: 0 1rem;
+}
+
+.meal-marker-content.open {
+  max-height: 600px;
+  padding: 0 1rem 1rem;
+}
+
+.meal-marker-desc {
+  font-size: 0.85rem;
+  color: var(--text-light);
+  margin-bottom: 0.75rem;
+  line-height: 1.6;
+}
+
+.restaurant-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.restaurant-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.6rem 0.85rem;
+  background: var(--white);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.restaurant-card:hover {
+  border-color: var(--ocean-light);
+  box-shadow: var(--shadow-sm);
+  transform: translateX(4px);
+}
+
+.restaurant-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.restaurant-info {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.day-free .travel-info {
+  background: linear-gradient(135deg, rgba(255, 107, 107, 0.06), rgba(255, 160, 122, 0.06));
+  border-color: rgba(255, 107, 107, 0.25);
+}
+
+.day-free .travel-info:hover {
+  background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(255, 160, 122, 0.1));
+  border-color: rgba(255, 107, 107, 0.4);
+}
+
+.day-free .travel-mode {
+  color: var(--coral);
+}
+
+.day-free .travel-time {
+  background: var(--coral);
+}
+
+/* ===== HOTEL OPTIONS ===== */
+.hotel-options {
+  position: relative;
+  margin: 0.5rem 0 0.5rem 2rem;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid rgba(0, 212, 170, 0.2);
+  background: linear-gradient(135deg, rgba(0, 212, 170, 0.05), rgba(46, 134, 171, 0.05));
+  transition: var(--transition);
+}
+
+.hotel-options:hover {
+  border-color: rgba(0, 212, 170, 0.35);
+}
+
+.hotel-options-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  cursor: default;
+}
+
+.hotel-options-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.hotel-options-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--turquoise);
+  flex: 1;
+}
+
+.hotel-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: none;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: var(--transition);
+}
+
+.hotel-toggle:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--text);
+}
+
+.hotel-toggle.open svg {
+  transform: rotate(180deg);
+}
+
+.hotel-toggle svg {
+  transition: transform 0.3s ease;
+}
+
+.hotel-options-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.4s ease;
+  padding: 0 1rem;
+}
+
+.hotel-options-content.open {
+  max-height: 2000px;
+  padding: 0 1rem 1rem;
+}
+
+.hotel-card {
+  padding: 0.85rem 1rem;
+  background: var(--white);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: var(--radius-sm);
+  margin-bottom: 0.6rem;
+  transition: var(--transition);
+}
+
+.hotel-card:last-child {
+  margin-bottom: 0;
+}
+
+.hotel-card:hover {
+  border-color: var(--turquoise);
+  box-shadow: var(--shadow-sm);
+  transform: translateX(4px);
+}
+
+.hotel-card-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.3rem;
+}
+
+.hotel-card-coords {
+  font-size: 0.75rem;
+  color: var(--turquoise);
+  font-family: monospace;
+  margin-bottom: 0.4rem;
+}
+
+.hotel-card-desc {
+  font-size: 0.82rem;
+  color: var(--text-light);
+  line-height: 1.6;
+  margin-bottom: 0.5rem;
+}
+
+.hotel-card-map {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.6rem;
+  background: rgba(0, 212, 170, 0.08);
+  border: 1px solid rgba(0, 212, 170, 0.15);
+  border-radius: 50px;
+  color: var(--turquoise);
+  text-decoration: none;
+  font-size: 0.75rem;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.hotel-card-map:hover {
+  background: var(--turquoise);
+  border-color: var(--turquoise);
+  color: var(--white);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 212, 170, 0.25);
+}
+
+.hotel-card-map svg {
+  flex-shrink: 0;
+}
+
+/* ===== MAP SECTION ===== */
+.map-section {
+  margin: 4rem auto 6rem;
+  max-width: 900px;
+  padding: 0 1.5rem;
+}
+
+.map-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.map-title {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.25rem;
+}
+
+.map-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.map-filters {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.map-filter {
+  padding: 0.5rem 1.25rem;
+  background: var(--white);
+  border: 2px solid rgba(0, 0, 0, 0.08);
+  border-radius: 50px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-light);
+  transition: var(--transition);
+}
+
+.map-filter:hover {
+  border-color: var(--ocean-light);
+  color: var(--ocean-mid);
+}
+
+.map-filter.active {
+  background: linear-gradient(135deg, var(--ocean-mid), var(--ocean-light));
+  border-color: transparent;
+  color: var(--white);
+  box-shadow: 0 4px 16px rgba(26, 82, 118, 0.25);
+}
+
+.map-container {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+#map {
+  width: 100%;
+  height: 500px;
+}
+
+@media (max-width: 768px) {
+  #map {
+    height: 350px;
+  }
+
+  .map-section {
+    margin: 3rem auto 4rem;
+  }
+}
+
+@media (max-width: 480px) {
+  #map {
+    height: 280px;
+  }
+}
+
+/* ===== HOTEL MAP LIST ===== */
+.hotel-map-list {
+  margin-top: 1.5rem;
+  background: var(--white);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  box-shadow: var(--shadow-sm);
+}
+
+.hotel-map-list-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.hotel-map-list-icon {
+  font-size: 1.2rem;
+}
+
+.hotel-map-list-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.hotel-map-list-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 0.5rem;
+}
+
+.hotel-map-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.65rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  border: 1px solid transparent;
+}
+
+.hotel-map-item:hover {
+  background: rgba(255, 215, 0, 0.08);
+  border-color: rgba(255, 215, 0, 0.2);
+  transform: translateX(3px);
+}
+
+.hotel-map-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+
+.hotel-map-name {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text);
+  flex: 1;
+  line-height: 1.3;
+}
+
+.hotel-map-coords {
+  font-size: 0.7rem;
+  font-family: monospace;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.hotel-map-item.active {
+  background: rgba(255, 215, 0, 0.15);
+  border-color: rgba(255, 215, 0, 0.35);
+}
+
+@media (max-width: 768px) {
+  .hotel-map-list-items {
+    grid-template-columns: 1fr;
+  }
+  .hotel-map-coords {
+    display: none;
+  }
+}
+
 /* ===== NAVIGATION ===== */
 .nav {
   position: fixed;

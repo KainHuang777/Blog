@@ -10,6 +10,10 @@
   const particlesContainer = document.getElementById('particles');
   const inkCanvas = document.getElementById('inkCanvas');
   const ctx = inkCanvas.getContext('2d');
+  const mapFilters = document.querySelectorAll('.map-filter');
+  let map = null;
+  let markers = [];
+  let markerGroup = null;
 
   let mouseX = 0;
   let mouseY = 0;
@@ -261,6 +265,133 @@
     });
   }
 
+  function initMap() {
+    if (typeof L === 'undefined') return;
+
+    map = L.map('map', {
+      zoomControl: true,
+      scrollWheelZoom: false,
+    }).setView([26.35, 127.75], 10);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors',
+      maxZoom: 18,
+    }).addTo(map);
+
+    markerGroup = L.layerGroup().addTo(map);
+    var hotelMarkerGroup = L.layerGroup().addTo(map);
+
+    var dayColors = {
+      '1': '#1a5276',
+      '2': '#2e86ab',
+      '3': '#ff6b6b',
+      '4': '#00d4aa',
+    };
+    var hotelColor = '#ffd700';
+
+    var cards = document.querySelectorAll('.card-has-bg[data-lat]');
+
+    cards.forEach(function (card) {
+      var lat = parseFloat(card.getAttribute('data-lat'));
+      var lng = parseFloat(card.getAttribute('data-lng'));
+      var day = card.getAttribute('data-day');
+      var title = card.querySelector('.card-title').textContent;
+      var color = dayColors[day] || '#1a5276';
+
+      var icon = L.divIcon({
+        className: 'custom-marker',
+        html: '<div style="background:' + color + ';width:28px;height:28px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;">' + day + '</div>',
+        iconSize: [28, 28],
+        iconAnchor: [14, 14],
+      });
+
+      var marker = L.marker([lat, lng], { icon: icon })
+        .bindPopup('<strong>' + title + '</strong><br><span style="color:' + color + '">Day ' + day + '</span>')
+        .addTo(markerGroup);
+
+      marker._day = day;
+      markers.push(marker);
+    });
+
+    var hotelMarkers = [];
+    var hotelItems = document.querySelectorAll('.hotel-map-item');
+
+    hotelItems.forEach(function (item) {
+      var lat = parseFloat(item.getAttribute('data-hotel-lat'));
+      var lng = parseFloat(item.getAttribute('data-hotel-lng'));
+      var name = item.querySelector('.hotel-map-name').textContent;
+      var coords = item.querySelector('.hotel-map-coords').textContent;
+
+      var icon = L.divIcon({
+        className: 'custom-marker',
+        html: '<div style="background:' + hotelColor + ';width:30px;height:30px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;color:#8b6914;font-size:14px;font-weight:700;">🏨</div>',
+        iconSize: [30, 30],
+        iconAnchor: [15, 15],
+      });
+
+      var marker = L.marker([lat, lng], { icon: icon })
+        .bindPopup('<strong>🏨 ' + name + '</strong><br><span style="color:#b8860b">旅天下常用配合飯店</span><br><span style="font-size:0.8rem;color:#888">' + coords + '</span>')
+        .addTo(hotelMarkerGroup);
+
+      marker._type = 'hotel';
+      marker._name = name;
+      hotelMarkers.push(marker);
+    });
+
+    mapFilters.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var filter = this.getAttribute('data-filter');
+
+        mapFilters.forEach(function (b) { b.classList.remove('active'); });
+        this.classList.add('active');
+
+        markerGroup.clearLayers();
+        hotelMarkerGroup.clearLayers();
+
+        if (filter === 'all') {
+          markers.forEach(function (m) { markerGroup.addLayer(m); });
+          hotelMarkers.forEach(function (m) { hotelMarkerGroup.addLayer(m); });
+          map.setView([26.35, 127.75], 10);
+        } else if (filter === 'hotel') {
+          hotelMarkers.forEach(function (m) { hotelMarkerGroup.addLayer(m); });
+          if (hotelMarkers.length > 0) {
+            var group = L.featureGroup(hotelMarkers);
+            map.fitBounds(group.getBounds().pad(0.15));
+          }
+        } else {
+          markers.forEach(function (marker) {
+            if (marker._day === filter) {
+              markerGroup.addLayer(marker);
+            }
+          });
+          var filtered = markers.filter(function (m) { return m._day === filter; });
+          if (filtered.length > 0) {
+            var group = L.featureGroup(filtered);
+            map.fitBounds(group.getBounds().pad(0.3));
+          }
+        }
+      });
+    });
+
+    hotelItems.forEach(function (item) {
+      item.addEventListener('click', function () {
+        var lat = parseFloat(this.getAttribute('data-hotel-lat'));
+        var lng = parseFloat(this.getAttribute('data-hotel-lng'));
+
+        hotelItems.forEach(function (i) { i.classList.remove('active'); });
+        this.classList.add('active');
+
+        map.setView([lat, lng], 15);
+
+        hotelMarkers.forEach(function (m) {
+          if (Math.abs(m.getLatLng().lat - lat) < 0.001 && Math.abs(m.getLatLng().lng - lng) < 0.001) {
+            m.openPopup();
+          }
+        });
+      });
+    });
+  }
+
   function initRevealObserver() {
     const observer = new IntersectionObserver(
       function (entries) {
@@ -303,6 +434,28 @@
     });
   }
 
+  function initMealToggles() {
+    document.querySelectorAll('.meal-toggle').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const marker = this.closest('.meal-marker');
+        const content = marker.querySelector('.meal-marker-content');
+        this.classList.toggle('open');
+        content.classList.toggle('open');
+      });
+    });
+  }
+
+  function initHotelToggles() {
+    document.querySelectorAll('.hotel-toggle').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const hotelOptions = this.closest('.hotel-options');
+        const content = hotelOptions.querySelector('.hotel-options-content');
+        this.classList.toggle('open');
+        content.classList.toggle('open');
+      });
+    });
+  }
+
   function initSmoothScroll() {
     document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
       anchor.addEventListener('click', function (e) {
@@ -321,7 +474,10 @@
     initCardBackgrounds();
     initRevealObserver();
     initThemeSwitcher();
+    initMealToggles();
+    initHotelToggles();
     initSmoothScroll();
+    initMap();
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
   }
