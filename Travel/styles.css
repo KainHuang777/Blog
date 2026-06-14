@@ -26,6 +26,7 @@
   --radius-xl: 32px;
   --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  --border-color: rgba(0, 0, 0, 0.08);
 }
 
 * {
@@ -86,13 +87,7 @@ body {
 }
 
 .card-has-bg:hover::after {
-  background: linear-gradient(
-    to bottom right,
-    rgba(255, 255, 255, 0.05) 0%,
-    rgba(255, 255, 255, 0.3) 40%,
-    rgba(255, 255, 255, 0.7) 70%,
-    rgba(255, 255, 255, 0.9) 100%
-  );
+  background: rgba(255, 255, 255, 0.92);
 }
 
 .card-has-bg > * {
@@ -103,14 +98,23 @@ body {
 .card-has-bg .card-title {
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 12px rgba(255, 255, 255, 0.6);
   color: var(--text);
+  transition: text-shadow var(--transition);
 }
 
 .card-has-bg .card-text {
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 0 8px rgba(255, 255, 255, 0.7);
+  transition: text-shadow var(--transition);
 }
 
 .card-has-bg .card-meta {
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), 0 0 8px rgba(255, 255, 255, 0.6);
+  transition: text-shadow var(--transition);
+}
+
+.card-has-bg:hover .card-title,
+.card-has-bg:hover .card-text,
+.card-has-bg:hover .card-meta {
+  text-shadow: none;
 }
 
 .card-has-bg .card-badge {
@@ -1358,3 +1362,732 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--ocean-mid);
 }
+
+/* ===== AUGUST ADVISORY ===== */
+.advisory-section {
+  max-width: 1000px;
+  margin: 0 auto 3rem auto;
+  padding: 0 1rem;
+}
+
+.advisory-card {
+  background: var(--card-bg);
+  border: 1px solid rgba(255, 138, 101, 0.2);
+  border-radius: var(--border-radius);
+  padding: 2.5rem;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+.advisory-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(255, 138, 101, 0.1);
+  border-color: rgba(255, 138, 101, 0.4);
+}
+
+.advisory-badge {
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  background: linear-gradient(135deg, #ff8a65, #ff5722);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 50px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 10px rgba(255, 87, 34, 0.2);
+}
+
+.advisory-title {
+  font-size: 1.75rem;
+  color: var(--text-dark);
+  margin-bottom: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.advisory-text {
+  color: var(--text-light);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.advisory-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.advisory-item {
+  display: flex;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  transition: background var(--transition-speed);
+}
+
+.dark-mode .advisory-item {
+  background: rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.advisory-icon {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.advisory-info-item strong {
+  display: block;
+  font-size: 1.1rem;
+  color: var(--text-dark);
+  margin-bottom: 0.5rem;
+}
+
+.advisory-info-item p {
+  font-size: 0.92rem;
+  color: var(--text-light);
+  line-height: 1.5;
+}
+
+/* Day 3 Advisory Warning in park card */
+.advisory-warning {
+  margin-top: 1rem;
+  padding: 0.85rem 1.25rem;
+  background: rgba(255, 152, 0, 0.1);
+  border-left: 4px solid #ff9800;
+  border-radius: 4px;
+  font-size: 0.92rem;
+  color: #e65100;
+  line-height: 1.5;
+}
+
+.dark-mode .advisory-warning {
+  background: rgba(255, 152, 0, 0.05);
+  color: #ffb74d;
+}
+
+/* ===== PACKING CHECKLIST ===== */
+.packing-section {
+  max-width: 1000px;
+  margin: 4rem auto;
+  padding: 0 1rem;
+}
+
+.packing-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.packing-title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 0.5rem;
+}
+
+.packing-subtitle {
+  color: var(--text-light);
+  font-size: 1.1rem;
+}
+
+.packing-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.packing-category {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+}
+
+.packing-category h3 {
+  font-size: 1.25rem;
+  color: var(--text-dark);
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--border-color);
+  font-weight: 600;
+}
+
+.packing-list-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.packing-list-items li label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+  color: var(--text-dark);
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.2s;
+}
+
+.packing-list-items li input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(26, 82, 118, 0.3);
+  background-color: var(--white);
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.packing-list-items li input[type="checkbox"]:hover {
+  border-color: var(--ocean-light);
+  background-color: rgba(46, 134, 171, 0.05);
+}
+
+.packing-list-items li input[type="checkbox"]:checked {
+  background-color: var(--ocean-light);
+  border-color: var(--ocean-light);
+}
+
+.packing-list-items li input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.packing-list-items li input[type="checkbox"]:focus-visible {
+  box-shadow: 0 0 0 2px rgba(3, 169, 244, 0.4);
+}
+
+.packing-list-items li label span {
+  transition: text-decoration 0.25s, opacity 0.25s;
+}
+
+.packing-list-items li input[type="checkbox"]:checked + span {
+  text-decoration: line-through;
+  opacity: 0.5;
+  color: var(--text-light);
+}
+
+/* ===== LIGHTBOX MODAL ===== */
+.lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(15px);
+  z-index: 2000;
+  opacity: 0;
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.4s ease;
+}
+
+.lightbox.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 3rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 2010;
+  transition: transform 0.2s, color 0.2s;
+}
+
+.lightbox-close:hover {
+  transform: scale(1.1);
+  color: var(--ocean-light);
+}
+
+.lightbox-content {
+  max-width: 90%;
+  max-height: 85%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.lightbox-content img {
+  max-width: 100%;
+  max-height: 75vh;
+  border-radius: 8px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.lightbox.active .lightbox-content img {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.lightbox-caption {
+  color: #fff;
+  margin-top: 1.5rem;
+  font-size: 1.2rem;
+  text-align: center;
+  font-weight: 500;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.lightbox-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #fff;
+  border-radius: 50%;
+  position: absolute;
+  animation: spin 1s infinite linear;
+  display: none;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ===== CARD ACTIONS & GALLERY BUTTON ===== */
+.card-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: auto;
+  padding-top: 1.5rem;
+  border-top: 1px dashed var(--border-color);
+  flex-wrap: wrap;
+}
+
+.card-map-link,
+.card-gallery-btn {
+  flex: 0 1 auto;
+  min-width: 120px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color var(--transition-speed), transform var(--transition-speed), border-color var(--transition-speed);
+}
+
+.card-map-link {
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-dark);
+}
+
+.card-map-link:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+  transform: translateY(-2px);
+}
+
+.dark-mode .card-map-link:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.card-gallery-btn {
+  background-color: rgba(3, 169, 244, 0.08);
+  border: 1px solid rgba(3, 169, 244, 0.15);
+  color: var(--ocean-mid);
+}
+
+.card-gallery-btn:hover {
+  background-color: var(--ocean-light);
+  border-color: var(--ocean-light);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* ===== MAP CONTAINER & OVERLAY ===== */
+.map-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+}
+
+.map-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 0.3s ease, pointer-events 0.3s ease;
+}
+
+.map-overlay.unlocked {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.map-overlay-content {
+  text-align: center;
+  background: var(--card-bg);
+  padding: 2rem;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  max-width: 80%;
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+}
+
+.map-overlay:not(.unlocked) .map-overlay-content {
+  transform: scale(1);
+}
+
+.map-overlay-icon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.map-overlay-text {
+  color: var(--text-dark);
+  font-size: 1.05rem;
+  margin-bottom: 1.25rem;
+  font-weight: 500;
+}
+
+.map-overlay-btn {
+  background: var(--ocean-light);
+  color: #fff;
+  border: none;
+  padding: 0.65rem 1.5rem;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s, transform 0.2s;
+  box-shadow: 0 4px 12px rgba(3, 169, 244, 0.2);
+}
+
+.map-overlay-btn:hover {
+  background: var(--ocean-mid);
+  transform: translateY(-1px);
+}
+
+/* ===== RESPONSIVE NEW COMPONENTS ===== */
+@media (max-width: 768px) {
+  .advisory-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .advisory-card {
+    padding: 1.5rem;
+  }
+  
+  .packing-container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .packing-category {
+    padding: 1.5rem;
+  }
+  
+  .lightbox-close {
+    top: 1rem;
+    right: 1rem;
+    font-size: 2.5rem;
+  }
+  
+  .card-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .card-map-link,
+  .card-gallery-btn {
+    width: 100%;
+  }
+}
+
+/* ===== WEATHER & DEVICE DETECTION ===== */
+.advisory-extra {
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px dashed rgba(255, 138, 101, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.weather-card {
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+.dark-mode .weather-card {
+  background: rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.weather-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.weather-title {
+  font-size: 1.15rem;
+  color: var(--text-dark);
+  font-weight: 600;
+  margin: 0;
+}
+
+.weather-update-time {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  background: rgba(0, 0, 0, 0.05);
+  padding: 0.25rem 0.6rem;
+  border-radius: 50px;
+}
+
+.dark-mode .weather-update-time {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.weather-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.75rem;
+}
+
+/* 行動端橫向滾動 */
+@media (max-width: 900px) {
+  .weather-grid {
+    display: flex;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .weather-item,
+  .weather-item-skeleton {
+    flex: 0 0 95px;
+  }
+}
+
+.weather-item {
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 12px;
+  padding: 0.85rem 0.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.dark-mode .weather-item {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.weather-item:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.dark-mode .weather-item:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.weather-item.is-today {
+  border: 2px solid var(--ocean-light);
+  background: rgba(3, 169, 244, 0.08);
+  box-shadow: 0 4px 15px rgba(3, 169, 244, 0.15);
+}
+
+.weather-item-date {
+  font-size: 0.75rem;
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+.weather-item-day {
+  font-size: 0.85rem;
+  color: var(--text-dark);
+  font-weight: 600;
+}
+
+.weather-item-icon {
+  font-size: 1.8rem;
+  margin: 0.25rem 0;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+.weather-item-temp {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.weather-item-pop {
+  font-size: 0.75rem;
+  color: var(--ocean-mid);
+  background: rgba(3, 169, 244, 0.1);
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+/* Weather Skeleton Shimmer Effect */
+.weather-item-skeleton {
+  background: linear-gradient(90deg, rgba(255,255,255,0.4) 25%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0.4) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 12px;
+  height: 120px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.dark-mode .weather-item-skeleton {
+  background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 75%);
+  background-size: 200% 100%;
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Device Detector Info */
+.device-detector-info {
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 12px;
+  padding: 0.75rem 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+  align-self: flex-start;
+}
+
+.dark-mode .device-detector-info {
+  background: rgba(0, 0, 0, 0.15);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.device-detect-pulse {
+  width: 8px;
+  height: 8px;
+  background-color: #4caf50;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
+  animation: pulse 1.6s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 6px rgba(76, 175, 80, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+  }
+}
+
+.device-detect-label {
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+.device-detect-value {
+  color: var(--text-dark);
+  font-weight: 600;
+}
+
+/* ===== RESTAURANT DISTANCE TAG ===== */
+.restaurant-distance {
+  display: block;
+  font-size: 0.78rem;
+  color: #e65100;
+  background: rgba(255, 152, 0, 0.08);
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  margin-top: 0.5rem;
+  font-weight: 500;
+  line-height: 1.4;
+  border-left: 3px solid #ff9800;
+  transition: background var(--transition-speed);
+}
+
+.dark-mode .restaurant-distance {
+  color: #ffb74d;
+  background: rgba(255, 152, 0, 0.05);
+  border-left-color: #ffb74d;
+}
+
+.restaurant-card:hover .restaurant-distance {
+  background: rgba(255, 152, 0, 0.15);
+}
+
+.dark-mode .restaurant-card:hover .restaurant-distance {
+  background: rgba(255, 152, 0, 0.1);
+}
+
+

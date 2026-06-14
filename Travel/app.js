@@ -28,11 +28,26 @@
     inkCanvas.height = window.innerHeight;
   }
 
+  function throttle(func, limit) {
+    let inThrottle;
+    return function () {
+      const args = arguments;
+      const context = this;
+      if (!inThrottle) {
+        func.apply(context, args);
+        inThrottle = true;
+        setTimeout(() => inThrottle = false, limit);
+      }
+    };
+  }
+
   function initInkSystem() {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    document.addEventListener('mousemove', function (e) {
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+    const handleMove = throttle(function (e) {
       prevMouseX = mouseX;
       prevMouseY = mouseY;
       mouseX = e.clientX;
@@ -43,15 +58,16 @@
       const speed = Math.sqrt(dx * dx + dy * dy);
 
       if (speed > 3) {
+        const limitFactor = isTouchDevice ? 0.25 : 1.0;
         const angle = Math.atan2(dy, dx);
-        const count = Math.min(Math.floor(speed / 5), 8);
+        const count = Math.min(Math.floor(speed / 5 * limitFactor), isTouchDevice ? 2 : 8);
 
         for (let i = 0; i < count; i++) {
           const t = i / count;
           const px = prevMouseX + dx * t + (Math.random() - 0.5) * 8;
           const py = prevMouseY + dy * t + (Math.random() - 0.5) * 8;
-          const strokeLen = speed * 0.6 + Math.random() * 20;
-          const strokeW = Math.random() * 6 + 3;
+          const strokeLen = (speed * 0.6 + Math.random() * 20) * (isTouchDevice ? 0.5 : 1.0);
+          const strokeW = (Math.random() * 6 + 3) * (isTouchDevice ? 0.6 : 1.0);
 
           inkStrokes.push({
             x: px,
@@ -59,19 +75,19 @@
             angle: angle + (Math.random() - 0.5) * 0.4,
             length: strokeLen,
             width: strokeW,
-            opacity: Math.random() * 0.4 + 0.5,
+            opacity: (Math.random() * 0.4 + 0.5) * (isTouchDevice ? 0.5 : 1.0),
             life: 1,
             decay: Math.random() * 0.025 + 0.03,
           });
         }
 
-        const splashCount = Math.min(Math.floor(speed / 12), 4);
+        const splashCount = Math.min(Math.floor(speed / 12 * limitFactor), isTouchDevice ? 1 : 4);
         for (let i = 0; i < splashCount; i++) {
           inkDrops.push({
             x: mouseX + (Math.random() - 0.5) * 30,
             y: mouseY + (Math.random() - 0.5) * 30,
-            radius: Math.random() * 8 + 3,
-            opacity: Math.random() * 0.5 + 0.4,
+            radius: (Math.random() * 8 + 3) * (isTouchDevice ? 0.6 : 1.0),
+            opacity: (Math.random() * 0.5 + 0.4) * (isTouchDevice ? 0.5 : 1.0),
             life: 1,
             decay: Math.random() * 0.02 + 0.025,
             vx: (Math.random() - 0.5) * 3,
@@ -84,16 +100,30 @@
             x: mouseX,
             y: mouseY,
             radius: 0,
-            maxRadius: speed * 1.5 + 40,
-            opacity: 0.5,
-            speed: 3,
+            maxRadius: (speed * 1.5 + 40) * (isTouchDevice ? 0.6 : 1.0),
+            opacity: isTouchDevice ? 0.3 : 0.5,
+            speed: isTouchDevice ? 2 : 3,
           });
         }
       }
-    });
+    }, isTouchDevice ? 32 : 16);
 
+    document.addEventListener('mousemove', handleMove);
+
+    if (isTouchDevice) {
+      document.addEventListener('touchmove', function (e) {
+        if (e.touches && e.touches[0]) {
+          handleMove({
+            clientX: e.touches[0].clientX,
+            clientY: e.touches[0].clientY
+          });
+        }
+      }, { passive: true });
+    }
+
+    // 降低背景隨機滴落頻率（觸控時 6 秒滴一次，桌面 3 秒）
     setInterval(function () {
-      if (Math.random() > 0.6) {
+      if (Math.random() > (isTouchDevice ? 0.8 : 0.6)) {
         inkDrops.push({
           x: Math.random() * inkCanvas.width,
           y: Math.random() * inkCanvas.height,
@@ -105,7 +135,7 @@
           vy: 0,
         });
       }
-    }, 2000);
+    }, isTouchDevice ? 6000 : 3000);
 
     animateInk();
   }
@@ -239,18 +269,44 @@
       nav.classList.remove('scrolled');
     }
 
-    let currentDay = '';
-    daySections.forEach(function (section) {
-      const top = section.offsetTop - 150;
-      if (scrollY >= top) {
-        currentDay = section.getAttribute('data-day');
+    if (window.isSmoothScrolling) return;
+
+    // 所有監聽區塊的定義，按照在頁面上的垂直位置排序
+    const sections = [
+      { id: 'weatherSection', navType: 'nav', navVal: 'weather' },
+      { id: 'day1', navType: 'day', navVal: '1' },
+      { id: 'day2', navType: 'day', navVal: '2' },
+      { id: 'day3', navType: 'day', navVal: '3' },
+      { id: 'day4', navType: 'day', navVal: '4' },
+      { id: 'mapSection', navType: 'nav', navVal: 'map' },
+      { id: 'hotelListSection', navType: 'nav', navVal: 'hotel' }
+    ];
+
+    let activeNavType = '';
+    let activeNavVal = '';
+
+    sections.forEach(function (sec) {
+      const el = document.getElementById(sec.id);
+      if (el) {
+        // 使用 -120px offset 獲取更自然的切換邊界
+        const top = el.offsetTop - 120;
+        if (scrollY >= top) {
+          activeNavType = sec.navType;
+          activeNavVal = sec.navVal;
+        }
       }
     });
 
     navLinks.forEach(function (link) {
       link.classList.remove('active');
-      if (link.getAttribute('data-day') === currentDay) {
-        link.classList.add('active');
+      if (activeNavType === 'day') {
+        if (link.getAttribute('data-day') === activeNavVal) {
+          link.classList.add('active');
+        }
+      } else if (activeNavType === 'nav') {
+        if (link.getAttribute('data-nav') === activeNavVal) {
+          link.classList.add('active');
+        }
       }
     });
   }
@@ -268,9 +324,13 @@
   function initMap() {
     if (typeof L === 'undefined') return;
 
+    const isMobile = window.innerWidth <= 768;
+
     map = L.map('map', {
-      zoomControl: true,
+      zoomControl: !isMobile,
       scrollWheelZoom: false,
+      dragging: !isMobile,
+      tap: !isMobile,
     }).setView([26.35, 127.75], 10);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -460,12 +520,315 @@
     document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
       anchor.addEventListener('click', function (e) {
         e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
+        const href = this.getAttribute('href');
+        const target = document.querySelector(href);
         if (target) {
-          target.scrollIntoView({ behavior: 'smooth' });
+          // 精確減去 Navbar 遮擋高度，避免 scrollIntoView offset 不精確問題
+          const targetOffset = target.offsetTop - 70;
+          window.scrollTo({
+            top: targetOffset,
+            behavior: 'smooth'
+          });
+
+          // 點擊後立即切換 active 類別，防止 smooth scroll 期間的 handleScroll 誤判
+          if (this.closest('.nav-links')) {
+            navLinks.forEach(function (link) {
+              link.classList.remove('active');
+            });
+            this.classList.add('active');
+
+            window.isSmoothScrolling = true;
+            clearTimeout(window.smoothScrollTimeout);
+            window.smoothScrollTimeout = setTimeout(function () {
+              window.isSmoothScrolling = false;
+            }, 800);
+          }
         }
       });
     });
+  }
+
+  function initPackingChecklist() {
+    const checkboxes = document.querySelectorAll('.packing-list-items input[type="checkbox"]');
+    let packingData = {};
+    
+    try {
+      const stored = localStorage.getItem('okinawa_packing');
+      if (stored) {
+        packingData = JSON.parse(stored);
+      }
+    } catch (e) {
+      console.error('Failed to parse packing checklist storage:', e);
+    }
+
+    checkboxes.forEach(function (cb) {
+      const packId = cb.getAttribute('data-pack');
+      if (packId && packingData[packId]) {
+        cb.checked = true;
+      }
+    });
+
+    checkboxes.forEach(function (cb) {
+      cb.addEventListener('change', function () {
+        const packId = this.getAttribute('data-pack');
+        if (packId) {
+          packingData[packId] = this.checked;
+          try {
+            localStorage.setItem('okinawa_packing', JSON.stringify(packingData));
+          } catch (e) {
+            console.error('Failed to save packing checklist storage:', e);
+          }
+        }
+      });
+    });
+  }
+
+  function initLightbox() {
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxCaption = document.getElementById('lightboxCaption');
+    const lightboxClose = document.getElementById('lightboxClose');
+    const lightboxSpinner = document.getElementById('lightboxSpinner');
+    const galleryBtns = document.querySelectorAll('.card-gallery-btn');
+
+    if (!lightbox || !lightboxImg || !lightboxCaption || !lightboxClose) return;
+
+    function openLightbox(imgUrl, captionText) {
+      lightbox.classList.add('active');
+      lightboxSpinner.style.display = 'block';
+      lightboxImg.style.opacity = '0';
+      
+      const tempImg = new Image();
+      tempImg.onload = function () {
+        lightboxImg.src = imgUrl;
+        lightboxImg.style.opacity = '1';
+        lightboxSpinner.style.display = 'none';
+      };
+      tempImg.onerror = function () {
+        lightboxSpinner.style.display = 'none';
+        lightboxImg.style.opacity = '0';
+        lightboxCaption.textContent = '圖片載入失敗';
+      };
+      tempImg.src = imgUrl;
+      
+      lightboxCaption.textContent = captionText || '';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('active');
+      lightboxImg.src = '';
+      lightboxCaption.textContent = '';
+      document.body.style.overflow = '';
+    }
+
+    galleryBtns.forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        const card = this.closest('.card');
+        if (card) {
+          const bgUrl = card.getAttribute('data-bg');
+          const titleEl = card.querySelector('.card-title');
+          const title = titleEl ? titleEl.textContent : '沖繩經典美景';
+          if (bgUrl) {
+            openLightbox(bgUrl, title);
+          }
+        }
+      });
+    });
+
+    lightboxClose.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', function (e) {
+      if (e.target === lightbox || e.target === lightbox.querySelector('.lightbox-content')) {
+        closeLightbox();
+      }
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+        closeLightbox();
+      }
+    });
+  }
+
+  function initMapOverlay() {
+    const overlay = document.getElementById('mapOverlay');
+    const unlockBtn = document.getElementById('mapUnlockBtn');
+    
+    if (!overlay || !unlockBtn) return;
+
+    unlockBtn.addEventListener('click', function () {
+      overlay.classList.add('unlocked');
+      if (map) {
+        map.dragging.enable();
+        if (map.tap) map.tap.enable();
+      }
+    });
+
+    window.addEventListener('scroll', function () {
+      if (overlay.classList.contains('unlocked')) {
+        const rect = document.getElementById('mapSection').getBoundingClientRect();
+        if (rect.bottom < 0 || rect.top > window.innerHeight) {
+          overlay.classList.remove('unlocked');
+          if (map) {
+            map.dragging.disable();
+            if (map.tap) map.tap.disable();
+          }
+        }
+      }
+    }, { passive: true });
+  }
+
+  function initDeviceDetection() {
+    const infoText = document.getElementById('deviceInfoText');
+    if (!infoText) return;
+
+    const ua = navigator.userAgent;
+    let os = '未知系統';
+    let browser = '未知瀏覽器';
+    let device = '桌上型電腦';
+
+    // 辨識 OS
+    if (/windows/i.test(ua)) {
+      os = 'Windows';
+      if (/windows nt 10.0/i.test(ua)) os = 'Windows 10/11';
+      else if (/windows nt 6.3/i.test(ua)) os = 'Windows 8.1';
+      else if (/windows nt 6.2/i.test(ua)) os = 'Windows 8';
+      else if (/windows nt 6.1/i.test(ua)) os = 'Windows 7';
+    } else if (/iphone|ipad|ipod/i.test(ua)) {
+      os = 'iOS';
+      device = 'iPhone/iPad';
+    } else if (/macintosh|mac os x/i.test(ua)) {
+      os = 'macOS';
+    } else if (/android/i.test(ua)) {
+      os = 'Android';
+      device = '行動裝置';
+    } else if (/linux/i.test(ua)) {
+      os = 'Linux';
+    }
+
+    // 辨識瀏覽器
+    if (/edg/i.test(ua)) {
+      browser = 'Microsoft Edge';
+    } else if (/chrome|crios/i.test(ua) && !/opr|opios|edg/i.test(ua)) {
+      browser = 'Google Chrome';
+    } else if (/safari/i.test(ua) && !/chrome|crios|opr|opios|edg/i.test(ua)) {
+      browser = 'Apple Safari';
+    } else if (/firefox|fxios/i.test(ua)) {
+      browser = 'Mozilla Firefox';
+    } else if (/opr/i.test(ua)) {
+      browser = 'Opera';
+    }
+
+    // 行動端細化
+    if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
+      device = '平板電腦';
+    } else if (/Mobile|iP(hone|od)|Android|BlackBerry|IEMobile|Kindle|NetFront|Silk-Accelerated|(hpw|web)OS|Fennec|Minimo|Opera M(obi|ini)|Blazer|Dolfin|Dolphin|Skyfire|Zune/i.test(ua)) {
+      device = '智慧型手機';
+    }
+
+    infoText.textContent = `${os} · ${browser} · ${device}`;
+  }
+
+  function initWeatherForecast() {
+    const grid = document.getElementById('weatherGrid');
+    const timeEl = document.getElementById('weatherTime');
+    if (!grid || !timeEl) return;
+
+    // 沖繩那霸
+    const lat = 26.2124;
+    const lng = 127.6809;
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FTokyo`;
+
+    const weatherIcons = {
+      0: '☀️',
+      1: '🌤️', 2: '⛅', 3: '☁️',
+      45: '🌫️', 48: '🌫️',
+      51: '🌧️', 53: '🌧️', 55: '🌧️',
+      61: '🌧️', 63: '🌧️', 65: '🌧️',
+      71: '❄️', 73: '❄️', 75: '❄️',
+      80: '🌦️', 81: '🌦️', 82: '🌦️',
+      95: '⛈️', 96: '⛈️', 99: '⛈️'
+    };
+
+    const weatherTexts = {
+      0: '晴天',
+      1: '晴時多雲', 2: '多雲', 3: '陰天',
+      45: '有霧', 48: '有霧',
+      51: '毛毛雨', 53: '毛毛雨', 55: '毛毛雨',
+      61: '小雨', 63: '中雨', 65: '大雨',
+      80: '局部陣雨', 81: '陣雨', 82: '強陣雨',
+      95: '雷陣雨', 96: '雷陣雨伴有冰雹', 99: '強雷陣雨'
+    };
+
+    function renderFallback() {
+      const fallbackData = [
+        { day: '一', date: 'Day 1', temp: '27-32°C', icon: '☀️', pop: '10%' },
+        { day: '二', date: 'Day 2', temp: '27-32°C', icon: '🌤️', pop: '20%' },
+        { day: '三', date: 'Day 3', temp: '27-32°C', icon: '🌦️', pop: '40%' },
+        { day: '四', date: 'Day 4', temp: '27-32°C', icon: '☀️', pop: '15%' },
+        { day: '五', date: '預備日', temp: '27-32°C', icon: '🌤️', pop: '20%' },
+        { day: '六', date: '預備日', temp: '28-33°C', icon: '☁️', pop: '30%' },
+        { day: '日', date: '預備日', temp: '28-33°C', icon: '⛈️', pop: '50%' }
+      ];
+      grid.innerHTML = fallbackData.map((item, idx) => `
+        <div class="weather-item ${idx === 0 ? 'is-today' : ''}">
+          <span class="weather-item-date">${item.date}</span>
+          <span class="weather-item-day">週${item.day}</span>
+          <span class="weather-item-icon">${item.icon}</span>
+          <span class="weather-item-temp">${item.temp}</span>
+          <span class="weather-item-pop">☔ ${item.pop}</span>
+        </div>
+      `).join('');
+      timeEl.textContent = '沖繩八月平均氣候資料 (載入即時天氣失敗)';
+    }
+
+    fetch(url)
+      .then(response => {
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.json();
+      })
+      .then(data => {
+        if (!data.daily) throw new Error('Data format error');
+        const daily = data.daily;
+        const now = new Date();
+        const updateTimeStr = now.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' });
+        timeEl.textContent = `更新時間: 今日 ${updateTimeStr}`;
+
+        grid.innerHTML = '';
+        const dayNames = ['日', '一', '二', '三', '四', '五', '六'];
+
+        for (let i = 0; i < 7; i++) {
+          const dateStr = daily.time[i];
+          const date = new Date(dateStr);
+          const month = date.getMonth() + 1;
+          const dayDate = date.getDate();
+          const dayName = dayNames[date.getDay()];
+          const code = daily.weathercode[i];
+          const tempMax = Math.round(daily.temperature_2m_max[i]);
+          const tempMin = Math.round(daily.temperature_2m_min[i]);
+          const pop = daily.precipitation_probability_max[i] || 0;
+
+          const icon = weatherIcons[code] || '❓';
+          const text = weatherTexts[code] || '未知氣候';
+          const isToday = i === 0;
+
+          const itemHtml = `
+            <div class="weather-item ${isToday ? 'is-today' : ''}" title="${text}">
+              <span class="weather-item-date">${month}/${dayDate}</span>
+              <span class="weather-item-day">${isToday ? '今日' : '週' + dayName}</span>
+              <span class="weather-item-icon">${icon}</span>
+              <span class="weather-item-temp">${isToday ? tempMin + '-' + tempMax : tempMin + '-' + tempMax}°C</span>
+              <span class="weather-item-pop">☔ ${pop}%</span>
+            </div>
+          `;
+          grid.innerHTML += itemHtml;
+        }
+      })
+      .catch(error => {
+        console.error('Weather Fetch Error:', error);
+        renderFallback();
+      });
   }
 
   function init() {
@@ -478,6 +841,11 @@
     initHotelToggles();
     initSmoothScroll();
     initMap();
+    initPackingChecklist();
+    initLightbox();
+    initMapOverlay();
+    initDeviceDetection();
+    initWeatherForecast();
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
   }

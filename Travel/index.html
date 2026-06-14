@@ -17,11 +17,13 @@
   <nav class="nav" id="nav">
     <div class="nav-brand">沖繩四日遊</div>
     <ul class="nav-links">
+      <li><a href="#weatherSection" data-nav="weather">七日天氣</a></li>
       <li><a href="#day1" data-day="1">Day 1</a></li>
       <li><a href="#day2" data-day="2">Day 2</a></li>
       <li><a href="#day3" data-day="3">Day 3</a></li>
       <li><a href="#day4" data-day="4">Day 4</a></li>
-      <li><a href="#mapSection">地圖</a></li>
+      <li><a href="#mapSection" data-nav="map">行程地圖</a></li>
+      <li><a href="#hotelListSection" data-nav="hotel">飯店備選</a></li>
     </ul>
   </nav>
 
@@ -49,6 +51,60 @@
 
   <main class="main">
 
+    <!-- 八月沖繩行前指南 -->
+    <section class="advisory-section reveal" id="weatherSection">
+      <div class="advisory-card">
+        <div class="advisory-badge">☀️ 八月出發特別指南</div>
+        <h3 class="advisory-title">沖繩仲夏盛典 · 旅行貼心小叮嚀</h3>
+        <p class="advisory-text">八月的沖繩充滿了蔚藍的天空與耀眼的陽光，是水上活動的最佳季節！為了讓您的旅程更加舒適與安全，請特別預防中暑並做好行前準備：</p>
+        <div class="advisory-grid">
+          <div class="advisory-item">
+            <span class="advisory-icon">🌡️</span>
+            <div class="advisory-info-item">
+              <strong>防暑降溫</strong>
+              <p>沖繩盛夏氣溫偏高，且紫外線極強。請務必隨時補充水分，避免在烈日下長時間曝曬，以防中暑。</p>
+            </div>
+          </div>
+          <div class="advisory-item">
+            <span class="advisory-icon">☂️</span>
+            <div class="advisory-info-item">
+              <strong>防曬與防雨</strong>
+              <p>建議準備物理防曬衣物、墨鏡與遮陽帽，並隨身攜帶折疊傘以應對偶爾的午後突發雷陣雨。</p>
+            </div>
+          </div>
+          <div class="advisory-item">
+            <span class="advisory-icon">🌀</span>
+            <div class="advisory-info-item">
+              <strong>颱風季備案</strong>
+              <p>建議行前密切關注天氣預報，並建議購買旅行平安險與不便險以備不時之需。</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 天氣預報與系統辨識區塊 -->
+        <div class="advisory-extra">
+          <div class="weather-card">
+            <div class="weather-header">
+              <h4 class="weather-title">🌦️ 沖繩那霸 · 即時天氣預報</h4>
+              <span class="weather-update-time" id="weatherTime">氣象資料讀取中...</span>
+            </div>
+            <div class="weather-grid" id="weatherGrid">
+              <div class="weather-item-skeleton"></div>
+              <div class="weather-item-skeleton"></div>
+              <div class="weather-item-skeleton"></div>
+              <div class="weather-item-skeleton"></div>
+              <div class="weather-item-skeleton"></div>
+            </div>
+          </div>
+          <div class="device-detector-info" id="deviceDetector">
+            <span class="device-detect-pulse"></span>
+            <span class="device-detect-label">💻 您的瀏覽環境：</span>
+            <span class="device-detect-value" id="deviceInfoText">正在辨識中...</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="day-section" id="day1" data-day="1">
       <div class="day-header">
         <span class="day-number">01</span>
@@ -65,10 +121,13 @@
               <div class="card-icon">✈️</div>
               <h3 class="card-title">台北桃園機場出發</h3>
               <p class="card-text">帶著期待的心情由台北出發，飛往有「日本夏威夷」之稱的沖繩。從機窗望去，蔚藍的東海逐漸轉變為通透的琉球碧色，旅程的興奮感油然而生。</p>
-              <a class="card-map-link" href="https://www.google.com/maps?q=25.0330,121.5654" target="_blank" rel="noopener">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                <span>Google 地圖</span>
-              </a>
+              <div class="card-actions">
+                <a class="card-map-link" href="https://www.google.com/maps?q=25.0330,121.5654" target="_blank" rel="noopener">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  <span>Google 地圖</span>
+                </a>
+
+              </div>
             </div>
           </div>
 
@@ -87,10 +146,13 @@
               <div class="card-icon">🛬</div>
               <h3 class="card-title">抵達那霸空港</h3>
               <p class="card-text">降落那霸空港，專業導遊接機後搭乘專車前往飯店。沖繩的空氣帶著溫暖的海風氣息，從踏出機場的那一刻就能感受到亞熱帶島嶼的獨特氛圍。</p>
-              <a class="card-map-link" href="https://www.google.com/maps?q=26.1958,127.6456" target="_blank" rel="noopener">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                <span>Google 地圖</span>
-              </a>
+              <div class="card-actions">
+                <a class="card-map-link" href="https://www.google.com/maps?q=26.1958,127.6456" target="_blank" rel="noopener">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  <span>Google 地圖</span>
+                </a>
+
+              </div>
             </div>
           </div>
 
@@ -186,41 +248,45 @@
               </div>
             </div>
           </div>
+        </div>
 
-          <div class="meal-marker reveal" data-meal="lunch">
-            <div class="meal-marker-header">
-              <span class="meal-marker-icon">🍱</span>
-              <span class="meal-marker-title">午餐 · 自理推薦</span>
-              <button class="meal-toggle" aria-label="展開餐廳推薦">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-              </button>
-            </div>
-            <div class="meal-marker-content">
-              <p class="meal-marker-desc">抵達沖繩後，推薦在飯店附近或國際通周邊享用第一頓沖繩美食：</p>
-              <div class="restaurant-list">
-                <a class="restaurant-card" href="https://www.google.com/maps/search/沖繩+蕎麥麵+國際通" target="_blank" rel="noopener">
-                  <span class="restaurant-name">🍜 沖繩蕎麥麵 花人逢</span>
-                  <span class="restaurant-info">國際通 · 沖繩必吃在地麵食</span>
-                </a>
-                <a class="restaurant-card" href="https://www.google.com/maps/search/A%26W+那霸" target="_blank" rel="noopener">
-                  <span class="restaurant-name">🍔 A&W 沖繩本店</span>
-                  <span class="restaurant-info">那霸市 · 沖繩限定美式速食</span>
-                </a>
-                <a class="restaurant-card" href="https://www.google.com/maps/search/塔可飯+國際通" target="_blank" rel="noopener">
-                  <span class="restaurant-name">🌮 塔可飯 滿壽美屋</span>
-                  <span class="restaurant-info">國際通 · 沖繩靈魂美食</span>
-                </a>
-              </div>
+        <div class="meal-marker reveal" data-meal="lunch">
+          <div class="meal-marker-header">
+            <span class="meal-marker-icon">🍱</span>
+            <span class="meal-marker-title">午餐 · 自理推薦</span>
+            <button class="meal-toggle" aria-label="展開餐廳推薦">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+          </div>
+          <div class="meal-marker-content">
+            <p class="meal-marker-desc">抵達沖繩後，推薦在飯店附近或國際通周邊享用第一頓沖繩美食：</p>
+            <div class="restaurant-list">
+              <a class="restaurant-card" href="https://www.google.com/maps/search/沖繩+蕎麥麵+國際通" target="_blank" rel="noopener">
+                <span class="restaurant-name">🍜 沖繩蕎麥麵 花人逢</span>
+                <span class="restaurant-info">國際通 · 沖繩必吃在地麵食</span>
+                <span class="restaurant-distance">🚗 距那霸空港約 15 分鐘車程 / 🚶 距飯店步行約 8 分鐘</span>
+              </a>
+              <a class="restaurant-card" href="https://www.google.com/maps/search/A%26W+那霸" target="_blank" rel="noopener">
+                <span class="restaurant-name">🍔 A&W 沖繩本店</span>
+                <span class="restaurant-info">那霸市 · 沖繩限定美式速食</span>
+                <span class="restaurant-distance">🚶 距飯店 (RJ Hotel) 步行約 5 分鐘</span>
+              </a>
+              <a class="restaurant-card" href="https://www.google.com/maps/search/塔可飯+國際通" target="_blank" rel="noopener">
+                <span class="restaurant-name">🌮 塔可飯 滿壽美屋</span>
+                <span class="restaurant-info">國際通 · 沖繩靈魂美食</span>
+                <span class="restaurant-distance">🚶 距飯店 (RJ Hotel) 步行約 9 分鐘</span>
+              </a>
             </div>
           </div>
         </div>
-        <div class="meal-info reveal">
-          <h4>今日餐食</h4>
-          <div class="meal-tags">
-            <span class="meal-tag">早餐：敬請自理</span>
-            <span class="meal-tag">午餐：敬請自理</span>
-            <span class="meal-tag">晚餐：機上輕食或自理</span>
-          </div>
+      </div>
+
+      <div class="meal-info reveal">
+        <h4>今日餐食</h4>
+        <div class="meal-tags">
+          <span class="meal-tag">早餐：敬請自理</span>
+          <span class="meal-tag">午餐：敬請自理</span>
+          <span class="meal-tag">晚餐：機上輕食或自理</span>
         </div>
       </div>
     </section>
@@ -246,10 +312,13 @@
                 <span>📍 恩納村</span>
                 <span>⏱ 約30分鐘</span>
               </div>
-              <a class="card-map-link" href="https://www.google.com/maps?q=26.6872,127.8556" target="_blank" rel="noopener">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                <span>Google 地圖</span>
-              </a>
+              <div class="card-actions">
+                <a class="card-map-link" href="https://www.google.com/maps?q=26.6872,127.8556" target="_blank" rel="noopener">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  <span>Google 地圖</span>
+                </a>
+
+              </div>
             </div>
           </div>
 
@@ -274,10 +343,13 @@
                 <span>📍 本部町</span>
                 <span>⏱ 約3-4小時</span>
               </div>
-              <a class="card-map-link" href="https://www.google.com/maps?q=26.6939,127.8769" target="_blank" rel="noopener">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                <span>Google 地圖</span>
-              </a>
+              <div class="card-actions">
+                <a class="card-map-link" href="https://www.google.com/maps?q=26.6939,127.8769" target="_blank" rel="noopener">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  <span>Google 地圖</span>
+                </a>
+
+              </div>
             </div>
           </div>
 
@@ -311,10 +383,13 @@
                 <span>📍 北谷町</span>
                 <span>⏱ 約2-3小時</span>
               </div>
-              <a class="card-map-link" href="https://www.google.com/maps?q=26.2850,127.7747" target="_blank" rel="noopener">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                <span>Google 地圖</span>
-              </a>
+              <div class="card-actions">
+                <a class="card-map-link" href="https://www.google.com/maps?q=26.2850,127.7747" target="_blank" rel="noopener">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  <span>Google 地圖</span>
+                </a>
+
+              </div>
             </div>
           </div>
 
@@ -332,14 +407,17 @@
                 <a class="restaurant-card" href="https://www.google.com/maps/search/美國村+海景+餐廳" target="_blank" rel="noopener">
                   <span class="restaurant-name">🌊 Sunset Beach 海景餐廳</span>
                   <span class="restaurant-info">美國村 · 夕陽海景 + 沖繩料理</span>
+                  <span class="restaurant-distance">🚶 位於美國村內，步行約 2 分鐘</span>
                 </a>
                 <a class="restaurant-card" href="https://www.google.com/maps/search/Mihama+American+Village+restaurant" target="_blank" rel="noopener">
                   <span class="restaurant-name">🍕 Depot Island 美食街</span>
                   <span class="restaurant-info">美國村 · 多國料理選擇</span>
+                  <span class="restaurant-distance">🚶 位於美國村內，步行約 1 分鐘</span>
                 </a>
                 <a class="restaurant-card" href="https://www.google.com/maps/search/北谷+燒肉" target="_blank" rel="noopener">
                   <span class="restaurant-name">🥩 沖繩石垣牛燒肉</span>
                   <span class="restaurant-info">北谷町 · 沖繩頂級和牛</span>
+                  <span class="restaurant-distance">🚶 距美國村步行約 5 分鐘</span>
                 </a>
               </div>
             </div>
@@ -396,10 +474,13 @@
                     <span>📍 豐見城市</span>
                     <span>⏱ 約2小時</span>
                   </div>
-                  <a class="card-map-link" href="https://www.google.com/maps?q=26.1389,127.6958" target="_blank" rel="noopener">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    <span>Google 地圖</span>
-                  </a>
+                  <div class="card-actions">
+                    <a class="card-map-link" href="https://www.google.com/maps?q=26.1389,127.6958" target="_blank" rel="noopener">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                      <span>Google 地圖</span>
+                    </a>
+
+                  </div>
                 </div>
               </div>
 
@@ -418,10 +499,13 @@
                   <div class="card-icon">🏖️</div>
                   <h3 class="card-title">豐崎美麗陽光海灘</h3>
                   <p class="card-text">DMM 水族館旁即是白沙綿延的豐崎海灘，海水清澈見底，是沖繩本島最適合戲水的海灘之一。可以在這裡堆沙堡、踏浪，享受悠閒的海島午後。</p>
-                  <a class="card-map-link" href="https://www.google.com/maps?q=26.1370,127.6920" target="_blank" rel="noopener">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    <span>Google 地圖</span>
-                  </a>
+                  <div class="card-actions">
+                    <a class="card-map-link" href="https://www.google.com/maps?q=26.1370,127.6920" target="_blank" rel="noopener">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                      <span>Google 地圖</span>
+                    </a>
+
+                  </div>
                 </div>
               </div>
             </div>
@@ -440,10 +524,13 @@
                     <span>📍 豐見城市</span>
                     <span>⏱ 約2-3小時</span>
                   </div>
-                  <a class="card-map-link" href="https://www.google.com/maps?q=26.2044,127.6622" target="_blank" rel="noopener">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    <span>Google 地圖</span>
-                  </a>
+                  <div class="card-actions">
+                    <a class="card-map-link" href="https://www.google.com/maps?q=26.2044,127.6622" target="_blank" rel="noopener">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                      <span>Google 地圖</span>
+                    </a>
+
+                  </div>
                 </div>
               </div>
 
@@ -462,10 +549,13 @@
                   <div class="card-icon">♨️</div>
                   <h3 class="card-title">瀨長島溫泉</h3>
                   <p class="card-text">島上設有天然溫泉設施「琉球溫泉 瀨長島酒店」，可以邊泡溫泉邊欣賞無敵海景。在自由行的午後泡個湯，洗去旅途的疲憊，是極致的放鬆體驗。</p>
-                  <a class="card-map-link" href="https://www.google.com/maps?q=26.2044,127.6622" target="_blank" rel="noopener">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    <span>Google 地圖</span>
-                  </a>
+                  <div class="card-actions">
+                    <a class="card-map-link" href="https://www.google.com/maps?q=26.2044,127.6622" target="_blank" rel="noopener">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                      <span>Google 地圖</span>
+                    </a>
+
+                  </div>
                 </div>
               </div>
             </div>
@@ -479,15 +569,19 @@
                   <div class="card-badge">小朋友最愛</div>
                   <div class="card-icon">🎠</div>
                   <h3 class="card-title">奧武山公園</h3>
-                  <p class="card-text">那霸市區內的大型綜合公園，擁有沖繩最知名的超長溜滑梯（全長約 15 公尺），是小朋友放電的天堂。公園內還有大型攀爬設施、沙坑和盪鞦韆，可以讓孩子們盡情玩耍整個下午。周圍綠蔭環繞，是都市中難得的綠洲。</p>
+                  <p class="card-text">那霸市區內的大型綜合公園，擁有沖繩最知名的超長溜滑梯（全長約 15 公尺），是小朋友放電的天堂。公園內還有大型攀爬設施、沙坑 and 盪鞦韆，可以讓孩子們盡情玩耍整個下午。周圍綠蔭環繞，是都市中難得的綠洲。</p>
+                  <p class="card-text advisory-warning">⚠️ 貼心提醒：八月沖繩天氣炎熱，公園內的金屬或塑料溜滑梯及遊具在烈日曝曬下表面溫度極高，容易發生燙傷危險。強烈建議安排在 16:30 之後的傍晚時分前往，並做好防曬與補水工作。</p>
                   <div class="card-meta">
                     <span>📍 那霸市</span>
                     <span>⏱ 約2小時</span>
                   </div>
-                  <a class="card-map-link" href="https://www.google.com/maps?q=26.2069,127.6789" target="_blank" rel="noopener">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    <span>Google 地圖</span>
-                  </a>
+                  <div class="card-actions">
+                    <a class="card-map-link" href="https://www.google.com/maps?q=26.2069,127.6789" target="_blank" rel="noopener">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                      <span>Google 地圖</span>
+                    </a>
+
+                  </div>
                 </div>
               </div>
 
@@ -506,10 +600,13 @@
                   <div class="card-icon">🚝</div>
                   <h3 class="card-title">單軌電車漫遊</h3>
                   <p class="card-text">利用沖繩便利的單軌電車（Yui Rail）穿梭市區，沿線經過首里城、牧志公設市場等景點。買一張一日乘車券，隨心所欲地探索那霸的每個角落。</p>
-                  <a class="card-map-link" href="https://www.google.com/maps?q=26.2125,127.6809" target="_blank" rel="noopener">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    <span>Google 地圖</span>
-                  </a>
+                  <div class="card-actions">
+                    <a class="card-map-link" href="https://www.google.com/maps?q=26.2125,127.6809" target="_blank" rel="noopener">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                      <span>Google 地圖</span>
+                    </a>
+
+                  </div>
                 </div>
               </div>
             </div>
@@ -546,10 +643,13 @@
                 <span>📍 那霸市</span>
                 <span>⏱ 約45分鐘</span>
               </div>
-              <a class="card-map-link" href="https://www.google.com/maps?q=26.2189,127.6756" target="_blank" rel="noopener">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                <span>Google 地圖</span>
-              </a>
+              <div class="card-actions">
+                <a class="card-map-link" href="https://www.google.com/maps?q=26.2189,127.6756" target="_blank" rel="noopener">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  <span>Google 地圖</span>
+                </a>
+
+              </div>
             </div>
           </div>
 
@@ -568,41 +668,48 @@
               <div class="card-icon">🛍️</div>
               <h3 class="card-title">免稅店 / 藥妝店</h3>
               <p class="card-text">前往沖繩市區的大型免稅商店，一次補齊必買的日本藥妝、沖繩限定土產伴手禮與紀念品。推薦購買紫薯塔、黑糖、泡盛酒等沖繩特產，以及雪肌精、龍角散等日本人氣商品。</p>
-              <a class="card-map-link" href="https://www.google.com/maps?q=26.2125,127.6809" target="_blank" rel="noopener">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                <span>Google 地圖</span>
-              </a>
-            </div>
-          </div>
+              <div class="card-actions">
+                <a class="card-map-link" href="https://www.google.com/maps?q=26.2125,127.6809" target="_blank" rel="noopener">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  <span>Google 地圖</span>
+                </a>
 
-          <div class="meal-marker reveal" data-meal="lunch">
-            <div class="meal-marker-header">
-              <span class="meal-marker-icon">🍱</span>
-              <span class="meal-marker-title">午餐 · 自理推薦</span>
-              <button class="meal-toggle" aria-label="展開餐廳推薦">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-              </button>
-            </div>
-            <div class="meal-marker-content">
-              <p class="meal-marker-desc">國際通周邊有許多道地沖繩美食，推薦在搭機前好好品嚐：</p>
-              <div class="restaurant-list">
-                <a class="restaurant-card" href="https://www.google.com/maps/search/國際通+沖繩+蕎麥麵" target="_blank" rel="noopener">
-                  <span class="restaurant-name">🍜 沖繩蕎麥麵 守禮</span>
-                  <span class="restaurant-info">國際通 · 60年老店沖繩麵</span>
-                </a>
-                <a class="restaurant-card" href="https://www.google.com/maps/search/牧志+公設市場" target="_blank" rel="noopener">
-                  <span class="restaurant-name">🐟 牧志公設市場</span>
-                  <span class="restaurant-info">國際通旁 · 現挑海鮮現烤</span>
-                </a>
-                <a class="restaurant-card" href="https://www.google.com/maps/search/國際通+燒肉+龍" target="_blank" rel="noopener">
-                  <span class="restaurant-name">🥩 燒肉 龍</span>
-                  <span class="restaurant-info">國際通 · 沖繩阿古豬專賣</span>
-                </a>
               </div>
             </div>
           </div>
+        </div>
 
-          <div class="travel-info reveal">
+        <div class="meal-marker reveal" data-meal="lunch">
+          <div class="meal-marker-header">
+            <span class="meal-marker-icon">🍱</span>
+            <span class="meal-marker-title">午餐 · 自理推薦</span>
+            <button class="meal-toggle" aria-label="展開餐廳推薦">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+          </div>
+          <div class="meal-marker-content">
+            <p class="meal-marker-desc">國際通周邊有許多道地沖繩美食，推薦在搭機前好好品嚐：</p>
+            <div class="restaurant-list">
+              <a class="restaurant-card" href="https://www.google.com/maps/search/國際通+沖繩+蕎麥麵" target="_blank" rel="noopener">
+                <span class="restaurant-name">🍜 沖繩蕎麥麵 守禮</span>
+                <span class="restaurant-info">國際通 · 60年老店沖繩麵</span>
+                <span class="restaurant-distance">🚶 距免稅店步行約 12 分鐘</span>
+              </a>
+              <a class="restaurant-card" href="https://www.google.com/maps/search/牧志+公設市場" target="_blank" rel="noopener">
+                <span class="restaurant-name">🐟 牧志公設市場</span>
+                <span class="restaurant-info">國際通旁 · 現挑海鮮現烤</span>
+                <span class="restaurant-distance">🚶 距免稅店步行約 15 分鐘 / 國際通旁</span>
+              </a>
+              <a class="restaurant-card" href="https://www.google.com/maps/search/國際通+燒肉+龍" target="_blank" rel="noopener">
+                <span class="restaurant-name">🥩 燒肉 龍</span>
+                <span class="restaurant-info">國際通 · 沖繩阿古豬專賣</span>
+                <span class="restaurant-distance">🚶 距免稅店步行約 10 分鐘 / 國際通內</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="travel-info reveal">
             <div class="travel-icon">🚶</div>
             <div class="travel-details">
               <span class="travel-mode">步行</span>
@@ -622,10 +729,13 @@
                 <span>📍 那霸市</span>
                 <span>⏱ 約1.5-2小時</span>
               </div>
-              <a class="card-map-link" href="https://www.google.com/maps?q=26.2133,127.6800" target="_blank" rel="noopener">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                <span>Google 地圖</span>
-              </a>
+              <div class="card-actions">
+                <a class="card-map-link" href="https://www.google.com/maps?q=26.2133,127.6800" target="_blank" rel="noopener">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  <span>Google 地圖</span>
+                </a>
+
+              </div>
             </div>
           </div>
 
@@ -644,10 +754,13 @@
               <div class="card-icon">🛫</div>
               <h3 class="card-title">那霸空港 · 返回台北</h3>
               <p class="card-text">帶著滿滿的收穫與回憶，由導遊帶領前往那霸空港，搭機返回台北。四天的沖繩之旅雖然短暫，但碧海藍天、琉球文化與家人的歡笑聲，將成為最珍貴的回憶。</p>
-              <a class="card-map-link" href="https://www.google.com/maps?q=26.1958,127.6456" target="_blank" rel="noopener">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                <span>Google 地圖</span>
-              </a>
+              <div class="card-actions">
+                <a class="card-map-link" href="https://www.google.com/maps?q=26.1958,127.6456" target="_blank" rel="noopener">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  <span>Google 地圖</span>
+                </a>
+
+              </div>
             </div>
           </div>
         </div>
@@ -658,6 +771,56 @@
             <span class="meal-tag">午餐：國際通自理</span>
             <span class="meal-tag">晚餐：機上輕食或自理</span>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 行前打包互動清單 -->
+    <section class="packing-section reveal" id="packingSection">
+      <div class="packing-header">
+        <h2 class="packing-title">🎒 行前打包清單</h2>
+        <p class="packing-subtitle">出發前的最後確認，打勾記錄不遺漏（本資訊儲存於目前瀏覽裝置中）</p>
+      </div>
+      <div class="packing-container">
+        <div class="packing-category">
+          <h3>🪪 證件與資金</h3>
+          <ul class="packing-list-items">
+            <li><label><input type="checkbox" data-pack="passport"> <span>護照正本（效期 6 個月以上）</span></label></li>
+            <li><label><input type="checkbox" data-pack="ticket"> <span>電子機票與飯店憑證影本</span></label></li>
+            <li><label><input type="checkbox" data-pack="license"> <span>台灣駕照正本 + 日文譯本（自駕必備）</span></label></li>
+            <li><label><input type="checkbox" data-pack="cash"> <span>日幣現金與雙幣信用卡</span></label></li>
+            <li><label><input type="checkbox" data-pack="vjw"> <span>Visit Japan Web 申報 QR Code 截圖</span></label></li>
+          </ul>
+        </div>
+        <div class="packing-category">
+          <h3>🧴 防曬與避暑</h3>
+          <ul class="packing-list-items">
+            <li><label><input type="checkbox" data-pack="sunscreen"> <span>防曬乳（建議海洋友善）與曬後蘆薈</span></label></li>
+            <li><label><input type="checkbox" data-pack="sunglasses"> <span>太陽眼鏡與防曬遮陽帽</span></label></li>
+            <li><label><input type="checkbox" data-pack="parasol"> <span>晴雨折疊傘或輕便雨衣</span></label></li>
+            <li><label><input type="checkbox" data-pack="bottle"> <span>隨身保溫水瓶（隨時補充水分）</span></label></li>
+            <li><label><input type="checkbox" data-pack="fan"> <span>手持隨身小電風扇</span></label></li>
+          </ul>
+        </div>
+        <div class="packing-category">
+          <h3>🏖️ 戲水與戶外</h3>
+          <ul class="packing-list-items">
+            <li><label><input type="checkbox" data-pack="swimwear"> <span>泳裝 / 水母衣（防曬防刮傷）</span></label></li>
+            <li><label><input type="checkbox" data-pack="towel"> <span>速乾大毛巾與防水袋</span></label></li>
+            <li><label><input type="checkbox" data-pack="case"> <span>手機防水袋（觸控氣囊型）</span></label></li>
+            <li><label><input type="checkbox" data-pack="sandals"> <span>防滑海灘鞋或涉水鞋（防珊瑚割傷）</span></label></li>
+            <li><label><input type="checkbox" data-pack="goggles"> <span>泳鏡與浮潛咬嘴裝備</span></label></li>
+          </ul>
+        </div>
+        <div class="packing-category">
+          <h3>🔌 藥品與電器</h3>
+          <ul class="packing-list-items">
+            <li><label><input type="checkbox" data-pack="meds"> <span>個人常備藥（感冒、暈車藥、腸胃藥）</span></label></li>
+            <li><label><input type="checkbox" data-pack="repellent"> <span>防蚊液與止癢藥膏</span></label></li>
+            <li><label><input type="checkbox" data-pack="charger"> <span>行動電源與充電線材</span></label></li>
+            <li><label><input type="checkbox" data-pack="sim"> <span>日本上網卡 (SIM/eSIM) 或分享器</span></label></li>
+            <li><label><input type="checkbox" data-pack="ziploc"> <span>防水收納袋或夾鏈袋</span></label></li>
+          </ul>
         </div>
       </div>
     </section>
@@ -679,8 +842,15 @@
     </div>
     <div class="map-container">
       <div id="map"></div>
+      <div class="map-overlay" id="mapOverlay">
+        <div class="map-overlay-content">
+          <span class="map-overlay-icon">🗺️</span>
+          <p class="map-overlay-text">點擊以解鎖並操作地圖</p>
+          <button class="map-overlay-btn" id="mapUnlockBtn">解鎖地圖</button>
+        </div>
+      </div>
     </div>
-    <div class="hotel-map-list reveal">
+    <div class="hotel-map-list reveal" id="hotelListSection">
       <div class="hotel-map-list-header">
         <span class="hotel-map-list-icon">🏨</span>
         <span class="hotel-map-list-title">待定飯店位置清單（旅天下常用配合飯店）</span>
@@ -731,6 +901,16 @@
       <p class="footer-sub">台北 ✈ 那霸 · 一段關於海與陽光的旅程</p>
     </div>
   </footer>
+
+  <!-- 景點大圖燈箱 Modal -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightboxClose" aria-label="關閉燈箱">&times;</button>
+    <div class="lightbox-content">
+      <img src="" alt="景點大圖" id="lightboxImg">
+      <div class="lightbox-caption" id="lightboxCaption"></div>
+    </div>
+    <div class="lightbox-spinner" id="lightboxSpinner"></div>
+  </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="app.js"></script>
