@@ -15,18 +15,28 @@
   <canvas class="ink-canvas" id="inkCanvas"></canvas>
 
   <nav class="nav" id="nav">
-    <div class="nav-brand">沖繩四日遊</div>
-    <div class="nav-scroll-hint" id="navScrollHint">
-      <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+    <div class="nav-top">
+      <div class="nav-brand">沖繩四日遊</div>
+      <div class="nav-quick-links">
+        <a href="#weatherSection" data-nav="weather" class="nav-quick-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          <span>天氣</span>
+        </a>
+        <a href="#mapSection" data-nav="map" class="nav-quick-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span>地圖</span>
+        </a>
+        <a href="#hotelListSection" data-nav="hotel" class="nav-quick-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span>飯店</span>
+        </a>
+      </div>
     </div>
     <ul class="nav-links" id="navLinks">
-      <li><a href="#weatherSection" data-nav="weather">七日天氣</a></li>
       <li><a href="#day1" data-day="1">Day 1</a></li>
       <li><a href="#day2" data-day="2">Day 2</a></li>
       <li><a href="#day3" data-day="3">Day 3</a></li>
       <li><a href="#day4" data-day="4">Day 4</a></li>
-      <li><a href="#mapSection" data-nav="map">行程地圖</a></li>
-      <li><a href="#hotelListSection" data-nav="hotel">飯店備選</a></li>
     </ul>
   </nav>
 
