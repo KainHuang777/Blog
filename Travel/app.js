@@ -12,6 +12,7 @@
   const inkCanvas = document.getElementById('inkCanvas');
   const ctx = inkCanvas.getContext('2d');
   const mapFilters = document.querySelectorAll('.map-filter');
+  const scrollProgressBar = document.getElementById('scrollProgress');
   let map = null;
   let markers = [];
   let markerGroup = null;
@@ -270,6 +271,12 @@
       nav.classList.remove('scrolled');
     }
 
+    if (scrollProgressBar) {
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollPercent = docHeight > 0 ? scrollY / docHeight : 0;
+      scrollProgressBar.style.transform = 'scaleX(' + scrollPercent + ')';
+    }
+
     if (window.isSmoothScrolling) return;
 
     // 所有監聽區塊的定義，按照在頁面上的垂直位置排序
@@ -467,6 +474,41 @@
 
     revealElements.forEach(function (el) {
       observer.observe(el);
+    });
+  }
+
+  function initScrollReveal() {
+    const sectionObserver = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+          }
+        });
+      },
+      { threshold: 0.05, rootMargin: '0px 0px -30px 0px' }
+    );
+
+    daySections.forEach(function (section, index) {
+      section.style.transitionDelay = (index % 4) * 0.1 + 's';
+      sectionObserver.observe(section);
+    });
+
+    const timelineObserver = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry, index) {
+          if (entry.isIntersecting) {
+            setTimeout(function () {
+              entry.target.classList.add('is-visible');
+            }, index * 80);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -20px 0px' }
+    );
+
+    document.querySelectorAll('.timeline-item').forEach(function (item) {
+      timelineObserver.observe(item);
     });
   }
 
@@ -837,6 +879,7 @@
     initInkSystem();
     initCardBackgrounds();
     initRevealObserver();
+    initScrollReveal();
     initThemeSwitcher();
     initMealToggles();
     initHotelToggles();
