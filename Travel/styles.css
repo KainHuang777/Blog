@@ -37,7 +37,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 60px;
+  scroll-padding-top: 110px;
 }
 
 body {
@@ -644,6 +644,19 @@ body {
   -webkit-backdrop-filter: blur(10px);
 }
 
+.nav-links {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  gap: 0.25rem;
+  padding: 0.4rem 0.75rem;
+  list-style: none;
+  background: rgba(10, 22, 40, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
 .nav.scrolled .nav-top {
   padding: 0.4rem 0.75rem;
 }
@@ -693,19 +706,6 @@ body {
   flex-shrink: 0;
 }
 
-.nav-links {
-  display: flex;
-  overflow-x: auto;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
-  gap: 0.25rem;
-  padding: 0.4rem 0.75rem;
-  list-style: none;
-  background: rgba(10, 22, 40, 0.6);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-
 .nav-links::-webkit-scrollbar {
   display: none;
 }
@@ -753,6 +753,7 @@ body {
   justify-content: center;
   background: linear-gradient(135deg, var(--ocean-deep) 0%, var(--ocean-mid) 40%, var(--ocean-light) 100%);
   overflow: hidden;
+  padding-top: 100px;
 }
 
 .hero::before {

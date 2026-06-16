@@ -290,7 +290,7 @@
       const el = document.getElementById(sec.id);
       if (el) {
         // 使用 -120px offset 獲取更自然的切換邊界
-        const top = el.offsetTop - 120;
+        const top = el.offsetTop - 140;
         if (scrollY >= top) {
           activeNavType = sec.navType;
           activeNavVal = sec.navVal;
@@ -525,7 +525,7 @@
         const target = document.querySelector(href);
         if (target) {
           // 精確減去 Navbar 遮擋高度，避免 scrollIntoView offset 不精確問題
-          const targetOffset = target.offsetTop - 70;
+          const targetOffset = target.offsetTop - 110;
           window.scrollTo({
             top: targetOffset,
             behavior: 'smooth'
