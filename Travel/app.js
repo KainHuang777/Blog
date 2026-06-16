@@ -2,7 +2,9 @@
   'use strict';
 
   const nav = document.getElementById('nav');
-  const navLinks = document.querySelectorAll('.nav-links a');
+  const navLinks = document.getElementById('navLinks');
+  const navLinksAll = document.querySelectorAll('.nav-links a');
+  const navScrollHint = document.getElementById('navScrollHint');
   const daySections = document.querySelectorAll('.day-section');
   const revealElements = document.querySelectorAll('.reveal');
   const themeButtons = document.querySelectorAll('.theme-btn');
@@ -14,6 +16,32 @@
   let map = null;
   let markers = [];
   let markerGroup = null;
+
+  function initNavScrollHint() {
+    if (!navLinks || !navScrollHint) return;
+    
+    const isMobile = window.innerWidth < 768;
+    if (!isMobile) return;
+
+    const hasOverflow = navLinks.scrollWidth > navLinks.clientWidth;
+    if (!hasOverflow) return;
+
+    let userScrolled = false;
+    
+    navLinks.addEventListener('scroll', function() {
+      userScrolled = true;
+      navScrollHint.style.opacity = '0';
+    }, { passive: true });
+
+    setTimeout(function() {
+      if (!userScrolled) {
+        navScrollHint.style.opacity = '1';
+        setTimeout(function() {
+          navScrollHint.style.opacity = '0';
+        }, 6000);
+      }
+    }, 1500);
+  }
 
   let mouseX = 0;
   let mouseY = 0;
@@ -297,7 +325,7 @@
       }
     });
 
-    navLinks.forEach(function (link) {
+    navLinksAll.forEach(function (link) {
       link.classList.remove('active');
       if (activeNavType === 'day') {
         if (link.getAttribute('data-day') === activeNavVal) {
@@ -532,7 +560,7 @@
 
           // 點擊後立即切換 active 類別，防止 smooth scroll 期間的 handleScroll 誤判
           if (this.closest('.nav-links')) {
-            navLinks.forEach(function (link) {
+            navLinksAll.forEach(function (link) {
               link.classList.remove('active');
             });
             this.classList.add('active');
@@ -832,6 +860,7 @@
   }
 
   function init() {
+    initNavScrollHint();
     initParticles();
     initInkSystem();
     initCardBackgrounds();
