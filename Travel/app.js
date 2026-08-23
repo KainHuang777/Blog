@@ -2,8 +2,7 @@
   'use strict';
 
   const nav = document.getElementById('nav');
-  const navLinks = document.getElementById('navLinks');
-  const navLinksAll = document.querySelectorAll('.nav-links a');
+  const navLinks = document.querySelectorAll('.nav-links a');
   const daySections = document.querySelectorAll('.day-section');
   const revealElements = document.querySelectorAll('.reveal');
   const themeButtons = document.querySelectorAll('.theme-btn');
@@ -12,7 +11,6 @@
   const inkCanvas = document.getElementById('inkCanvas');
   const ctx = inkCanvas.getContext('2d');
   const mapFilters = document.querySelectorAll('.map-filter');
-  const scrollProgressBar = document.getElementById('scrollProgress');
   let map = null;
   let markers = [];
   let markerGroup = null;
@@ -271,12 +269,6 @@
       nav.classList.remove('scrolled');
     }
 
-    if (scrollProgressBar) {
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const scrollPercent = docHeight > 0 ? scrollY / docHeight : 0;
-      scrollProgressBar.style.transform = 'scaleX(' + scrollPercent + ')';
-    }
-
     if (window.isSmoothScrolling) return;
 
     // 所有監聽區塊的定義，按照在頁面上的垂直位置排序
@@ -297,7 +289,7 @@
       const el = document.getElementById(sec.id);
       if (el) {
         // 使用 -120px offset 獲取更自然的切換邊界
-        const top = el.offsetTop - 140;
+        const top = el.offsetTop - 120;
         if (scrollY >= top) {
           activeNavType = sec.navType;
           activeNavVal = sec.navVal;
@@ -305,7 +297,7 @@
       }
     });
 
-    navLinksAll.forEach(function (link) {
+    navLinks.forEach(function (link) {
       link.classList.remove('active');
       if (activeNavType === 'day') {
         if (link.getAttribute('data-day') === activeNavVal) {
@@ -398,7 +390,7 @@
       });
 
       var marker = L.marker([lat, lng], { icon: icon })
-        .bindPopup('<strong>🏨 ' + name + '</strong><br><span style="color:#b8860b">旅天下常用配合飯店</span><br><span style="font-size:0.8rem;color:#888">' + coords + '</span>')
+        .bindPopup('<strong>🏨 ' + name + '</strong><br><span style="color:#b8860b">本團已確認住宿</span><br><span style="font-size:0.8rem;color:#888">' + coords + '</span>')
         .addTo(hotelMarkerGroup);
 
       marker._type = 'hotel';
@@ -477,41 +469,6 @@
     });
   }
 
-  function initScrollReveal() {
-    const sectionObserver = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-          }
-        });
-      },
-      { threshold: 0.05, rootMargin: '0px 0px -30px 0px' }
-    );
-
-    daySections.forEach(function (section, index) {
-      section.style.transitionDelay = (index % 4) * 0.1 + 's';
-      sectionObserver.observe(section);
-    });
-
-    const timelineObserver = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry, index) {
-          if (entry.isIntersecting) {
-            setTimeout(function () {
-              entry.target.classList.add('is-visible');
-            }, index * 80);
-          }
-        });
-      },
-      { threshold: 0.1, rootMargin: '0px 0px -20px 0px' }
-    );
-
-    document.querySelectorAll('.timeline-item').forEach(function (item) {
-      timelineObserver.observe(item);
-    });
-  }
-
   function initThemeSwitcher() {
     themeButtons.forEach(function (btn) {
       btn.addEventListener('click', function () {
@@ -567,7 +524,7 @@
         const target = document.querySelector(href);
         if (target) {
           // 精確減去 Navbar 遮擋高度，避免 scrollIntoView offset 不精確問題
-          const targetOffset = target.offsetTop - 110;
+          const targetOffset = target.offsetTop - 70;
           window.scrollTo({
             top: targetOffset,
             behavior: 'smooth'
@@ -575,7 +532,7 @@
 
           // 點擊後立即切換 active 類別，防止 smooth scroll 期間的 handleScroll 誤判
           if (this.closest('.nav-links')) {
-            navLinksAll.forEach(function (link) {
+            navLinks.forEach(function (link) {
               link.classList.remove('active');
             });
             this.classList.add('active');
@@ -879,7 +836,6 @@
     initInkSystem();
     initCardBackgrounds();
     initRevealObserver();
-    initScrollReveal();
     initThemeSwitcher();
     initMealToggles();
     initHotelToggles();
@@ -888,7 +844,6 @@
     initPackingChecklist();
     initLightbox();
     initMapOverlay();
-    initDeviceDetection();
     initWeatherForecast();
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
