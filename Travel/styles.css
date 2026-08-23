@@ -719,6 +719,28 @@ body {
   border-radius: 2px;
 }
 
+.nav-toggle {
+  display: none;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 10px;
+  background: rgba(10, 22, 40, 0.28);
+  color: var(--white);
+  cursor: pointer;
+}
+
+.nav-toggle span {
+  display: block;
+  width: 19px;
+  height: 2px;
+  margin: 4px auto;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
 /* ===== HERO ===== */
 .hero {
   position: relative;
@@ -1257,16 +1279,58 @@ body {
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   .nav {
-    padding: 0.75rem 1rem;
+    min-height: 64px;
+    padding: 0.7rem 1rem;
+  }
+
+  .nav-brand {
+    max-width: calc(100% - 58px);
+    font-size: 1rem;
+    line-height: 1.35;
+    white-space: nowrap;
+  }
+
+  .nav-toggle {
+    display: block;
+    flex: 0 0 auto;
   }
 
   .nav-links {
-    gap: 0.25rem;
+    position: absolute;
+    top: calc(100% + 0.45rem);
+    left: 1rem;
+    right: 1rem;
+    display: none;
+    max-height: calc(100vh - 90px);
+    margin: 0;
+    padding: 0.5rem;
+    overflow-y: auto;
+    background: rgba(10, 22, 40, 0.97);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 12px;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.3);
+  }
+
+  .nav.menu-open .nav-links {
+    display: block;
+  }
+
+  .nav.menu-open .nav-toggle span:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+  }
+
+  .nav.menu-open .nav-toggle span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .nav.menu-open .nav-toggle span:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
   }
 
   .nav-links a {
-    padding: 0.4rem 0.6rem;
-    font-size: 0.8rem;
+    display: block;
+    padding: 0.8rem 0.9rem;
+    font-size: 0.95rem;
   }
 
   .main {
@@ -1323,12 +1387,7 @@ body {
 
 @media (max-width: 480px) {
   .nav-brand {
-    font-size: 1rem;
-  }
-
-  .nav-links a {
-    padding: 0.3rem 0.5rem;
-    font-size: 0.75rem;
+    font-size: 0.95rem;
   }
 
   .hero-cta {
@@ -2089,4 +2148,3 @@ body {
 .dark-mode .restaurant-card:hover .restaurant-distance {
   background: rgba(255, 152, 0, 0.1);
 }
-

@@ -3,6 +3,7 @@
 
   const nav = document.getElementById('nav');
   const navLinks = document.querySelectorAll('.nav-links a');
+  const navToggle = document.querySelector('.nav-toggle');
   const daySections = document.querySelectorAll('.day-section');
   const revealElements = document.querySelectorAll('.reveal');
   const themeButtons = document.querySelectorAll('.theme-btn');
@@ -542,9 +543,33 @@
             window.smoothScrollTimeout = setTimeout(function () {
               window.isSmoothScrolling = false;
             }, 800);
+
+            if (navToggle && window.matchMedia('(max-width: 768px)').matches) {
+              nav.classList.remove('menu-open');
+              navToggle.setAttribute('aria-expanded', 'false');
+              navToggle.setAttribute('aria-label', '開啟行程選單');
+            }
           }
         }
       });
+    });
+  }
+
+  function initMobileNav() {
+    if (!navToggle) return;
+
+    navToggle.addEventListener('click', function () {
+      const isOpen = nav.classList.toggle('menu-open');
+      navToggle.setAttribute('aria-expanded', String(isOpen));
+      navToggle.setAttribute('aria-label', isOpen ? '關閉行程選單' : '開啟行程選單');
+    });
+
+    window.addEventListener('resize', function () {
+      if (!window.matchMedia('(max-width: 768px)').matches) {
+        nav.classList.remove('menu-open');
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.setAttribute('aria-label', '開啟行程選單');
+      }
     });
   }
 
@@ -840,6 +865,7 @@
     initMealToggles();
     initHotelToggles();
     initSmoothScroll();
+    initMobileNav();
     initMap();
     initPackingChecklist();
     initLightbox();

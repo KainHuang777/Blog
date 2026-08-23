@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>創連科技｜沖繩 4 日員工旅遊</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=20260823.1">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Zen+Maru+Gothic:wght@400;700;900&display=swap" rel="stylesheet">
@@ -16,7 +16,10 @@
 
   <nav class="nav" id="nav">
     <div class="nav-brand">創連科技｜沖繩 4 日</div>
-    <ul class="nav-links">
+    <button class="nav-toggle" type="button" aria-label="開啟行程選單" aria-controls="navLinks" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
       <li><a href="#weatherSection" data-nav="weather">七日天氣</a></li>
       <li><a href="#day1" data-day="1">Day 1</a></li>
       <li><a href="#day2" data-day="2">Day 2</a></li>
@@ -775,6 +778,6 @@
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="app.js"></script>
+  <script src="app.js?v=20260823.1"></script>
 </body>
 </html>
