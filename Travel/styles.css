@@ -1201,6 +1201,21 @@ body {
   transition: var(--transition);
 }
 
+.theme-btn-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.12rem;
+  text-align: left;
+}
+
+.theme-btn-route {
+  font-size: 0.68rem;
+  font-weight: 400;
+  opacity: 0.75;
+  white-space: nowrap;
+}
+
 .theme-btn:hover {
   border-color: var(--coral);
   color: var(--coral);
@@ -1215,8 +1230,44 @@ body {
   box-shadow: 0 4px 20px rgba(255, 107, 107, 0.3);
 }
 
+.theme-btn.active .theme-btn-route {
+  opacity: 0.9;
+}
+
 .theme-btn-icon {
   font-size: 1.2rem;
+}
+
+.rain-plan {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin: 1rem 0 1.5rem 2rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid rgba(46, 134, 171, 0.24);
+  border-left: 3px solid var(--ocean-light);
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, rgba(46, 134, 171, 0.08), rgba(0, 212, 170, 0.06));
+}
+
+.rain-plan-icon {
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.rain-plan-label {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: var(--ocean-dark);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.rain-plan p {
+  margin: 0;
+  color: var(--text-light);
+  font-size: 0.8rem;
+  line-height: 1.65;
 }
 
 .theme-panels {
