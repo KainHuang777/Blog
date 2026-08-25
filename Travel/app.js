@@ -279,6 +279,7 @@
       { id: 'day2', navType: 'day', navVal: '2' },
       { id: 'day3', navType: 'day', navVal: '3' },
       { id: 'day4', navType: 'day', navVal: '4' },
+      { id: 'hotelDiningSection', navType: 'nav', navVal: 'dining' },
       { id: 'mapSection', navType: 'nav', navVal: 'map' },
       { id: 'hotelListSection', navType: 'nav', navVal: 'hotel' }
     ];
